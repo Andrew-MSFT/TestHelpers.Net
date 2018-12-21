@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -51,14 +51,24 @@ namespace VisualStudio.TestHelpers.Tests
             }
             catch (DirectoryNotFoundException)
             {
-                foreach (string message in _testHelper.DiagnosticLog)
-                {
-                    _output.WriteLine(message);
-                }
+                PrintDiagLog(_testHelper);
                 throw;
             }
         }
 
+        [Fact]
+        public void DetectxUnitFramework()
+        {
+            Assert.Equal(TestFrameworks.xUnit, _testHelper.TestFramework);
+        }
+
+        internal void PrintDiagLog(LiveUnitTestingHelper helper)
+        {
+            foreach (string message in helper.DiagnosticLog)
+            {
+                _output.WriteLine(message);
+            }
+        }
 
 
     }

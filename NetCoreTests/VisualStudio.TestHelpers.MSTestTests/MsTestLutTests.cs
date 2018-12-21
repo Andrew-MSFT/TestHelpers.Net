@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
 namespace VisualStudio.TestHelpers.MSTestTests
@@ -24,6 +24,12 @@ namespace VisualStudio.TestHelpers.MSTestTests
             string fullFile = Path.Combine(projectDirectory, "data", "test.txt");
 
             Assert.IsTrue(File.Exists(fullFile));
+        }
+
+        [TestMethod]
+        public void DetectMsTestFramework()
+        {
+            Assert.AreEqual(TestFrameworks.MsTest, _testingHelper.TestFramework);
         }
     }
 }

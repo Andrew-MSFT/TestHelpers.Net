@@ -36,5 +36,11 @@ namespace Tests
 
             Assert.IsTrue(File.Exists(fullFile));
         }
+
+        [Test]
+        public void DetectNUnitFramework()
+        {
+            Assert.AreEqual(TestFrameworks.NUnit, _testHelper.TestFramework);
+        }
     }
 }

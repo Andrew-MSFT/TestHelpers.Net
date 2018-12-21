@@ -11,25 +11,42 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
 namespace VisualStudio.TestHelpers
 {
+    public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
+
     public class LiveUnitTestingHelper
     {
-        public List<string> DiagnosticLog { get; private set; } = new List<string>();
+        internal List<string> DiagnosticLog { get; private set; }
 
         public string TestProjectName { get; private set; }
+        public TestFrameworks TestFramework { get; set; }
 
         public LiveUnitTestingHelper()
         {
-            this.TestProjectName = GetTestProjectNameFromCallingAssembly();
+            string assemblyName = GetTestProjectNameFromCallingAssembly();
+            Initialize(assemblyName);
         }
 
         public LiveUnitTestingHelper(string currentProjectName)
         {
+            Initialize(currentProjectName);
+
+        }
+
+        private void Initialize(string currentProjectName)
+        {
             this.TestProjectName = currentProjectName;
+            this.TestFramework = DetectTestFramework();
         }
 
         private void LogMessage(string message)
         {
+#if DEBUG
+            if(this.DiagnosticLog == null)
+            {
+                this.DiagnosticLog = new List<string>();
+            }
             this.DiagnosticLog.Add(message);
+#endif
         }
 
         public string GetTestProjectDirectory()
@@ -139,7 +156,7 @@ namespace VisualStudio.TestHelpers
             return isLut;
         }
 
-        internal bool IsLutBasedOnStack(bool isLut)
+        private TestFrameworks DetectTestFramework()
         {
             var stackTrace = new StackTrace();           // get call stack
             StackFrame[] stackFrames = stackTrace.GetFrames();  // get method calls (frames)
@@ -153,19 +170,22 @@ namespace VisualStudio.TestHelpers
 
                 LogMessage($"     {assemblyName}::{method}");
 
-                if (assemblyName.StartsWith("xunit"))
+                if (assemblyName.StartsWith("Microsoft.VisualStudio.TestPlatform.MSTest", StringComparison.InvariantCultureIgnoreCase))
                 {
-
+                    return TestFrameworks.MsTest;
+                }
+                else if (assemblyName.StartsWith("xunit", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return TestFrameworks.xUnit;
+                }
+                else if (assemblyName.StartsWith("nunit", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return TestFrameworks.NUnit;
                 }
 
-                if (assemblyName == "Microsoft.TestPlatform.CoreUtilities" && method.Name == "BackgroundJobProcessor")
-                {
-                    isLut = true;
-                    break;
-                }
             }
 
-            return isLut;
+            return TestFrameworks.Unknown;
         }
 
         internal bool IsLutBasedOnPath()
