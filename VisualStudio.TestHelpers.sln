@@ -18,6 +18,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualStudio.TestHelpers.NU
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetCoreTests", "NetCoreTests", "{8F0BE82E-4955-4325-9F7A-960240D46B39}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetFrameworkTests", "NetFrameworkTests", "{BC5DFE66-BE41-4BF6-896F-9AF692729C89}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualStudio.TestHelpers.NetFx.MsTestTests", "NetFrameworkTests\VisualStudio.TestHelpers.NetFx.MsTestTests\VisualStudio.TestHelpers.NetFx.MsTestTests.csproj", "{0AD16934-C0F4-457B-96D2-28840C0EC0BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +44,10 @@ Global
 		{DBBFD9EB-47EB-41A1-BCC1-D70FA4D83E17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBBFD9EB-47EB-41A1-BCC1-D70FA4D83E17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBBFD9EB-47EB-41A1-BCC1-D70FA4D83E17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0AD16934-C0F4-457B-96D2-28840C0EC0BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AD16934-C0F4-457B-96D2-28840C0EC0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0AD16934-C0F4-457B-96D2-28840C0EC0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0AD16934-C0F4-457B-96D2-28840C0EC0BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +56,7 @@ Global
 		{AADDE42D-EDDF-411D-B43C-7463E4C96B49} = {8F0BE82E-4955-4325-9F7A-960240D46B39}
 		{B957F60C-B3D4-433B-8AC9-C8EFA226E829} = {8F0BE82E-4955-4325-9F7A-960240D46B39}
 		{DBBFD9EB-47EB-41A1-BCC1-D70FA4D83E17} = {8F0BE82E-4955-4325-9F7A-960240D46B39}
+		{0AD16934-C0F4-457B-96D2-28840C0EC0BE} = {BC5DFE66-BE41-4BF6-896F-9AF692729C89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19A895F3-72A7-4296-BFEC-A84B945D1751}

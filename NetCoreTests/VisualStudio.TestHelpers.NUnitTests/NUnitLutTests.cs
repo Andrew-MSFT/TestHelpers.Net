@@ -32,7 +32,7 @@ namespace Tests
         public void CanOpenFile()
         {
             string projectDirectory = _testHelper.GetTestProjectDirectory();
-            string fullFile = Path.Combine(projectDirectory, "", "test.txt");
+            string fullFile = Path.Combine(projectDirectory, "test.txt");
 
             Assert.IsTrue(File.Exists(fullFile));
         }
