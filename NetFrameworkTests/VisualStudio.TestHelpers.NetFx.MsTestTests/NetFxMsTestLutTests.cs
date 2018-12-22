@@ -9,6 +9,11 @@ namespace VisualStudio.TestHelpers.NetFx.MsTestTests
     {
         readonly LiveUnitTestingHelper _testHelper = new LiveUnitTestingHelper();
 
+        public NetFxMsTestLutTests()
+        {
+            _testHelper.LogWriter = new ConsoleTestLogWriter();
+        }
+
         [TestMethod]
         public void RunningUnderLut()
         {

@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
 using System.IO;
 using VisualStudio.TestHelpers;
 
@@ -12,6 +11,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
+            _testHelper.LogWriter = new ConsoleTestLogWriter();
         }
 
         [Test]
@@ -19,11 +19,6 @@ namespace Tests
         {
             bool runningUnderLut = _testHelper.IsRunningUnderLut();
             bool pathBased = _testHelper.IsLutBasedOnPath();
-
-            foreach(string message in _testHelper.DiagnosticLog)
-            {
-                Console.WriteLine(message);
-            }
 
             Assert.AreEqual(runningUnderLut, pathBased);
         }

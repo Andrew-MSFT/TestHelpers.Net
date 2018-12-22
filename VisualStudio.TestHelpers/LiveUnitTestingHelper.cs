@@ -15,10 +15,12 @@ namespace VisualStudio.TestHelpers
 
     public class LiveUnitTestingHelper
     {
-        internal List<string> DiagnosticLog { get; private set; }
+        private List<string> DiagnosticLog { get; set; }
 
-        public string TestProjectName { get; private set; }
+        public string CurrentProjectFolderName { get; private set; }
         public TestFrameworks TestFramework { get; set; }
+
+        internal ITestLogWriter LogWriter { get; set; }
 
         public LiveUnitTestingHelper()
         {
@@ -26,37 +28,27 @@ namespace VisualStudio.TestHelpers
             Initialize(assemblyName);
         }
 
-        public LiveUnitTestingHelper(string currentProjectName)
+        public LiveUnitTestingHelper(string currentProjectFolderName)
         {
-            Initialize(currentProjectName);
+            Initialize(currentProjectFolderName);
 
         }
 
         private void Initialize(string currentProjectName)
         {
-            this.TestProjectName = currentProjectName;
+            this.CurrentProjectFolderName = currentProjectName;
             this.TestFramework = DetectTestFramework();
         }
 
         private void LogMessage(string message)
         {
-#if DEBUG
-            if(this.DiagnosticLog == null)
+            if(this.LogWriter != null)
             {
-                this.DiagnosticLog = new List<string>();
+                this.LogWriter.LogMessage(message);
             }
-            this.DiagnosticLog.Add(message);
-#endif
         }
 
         public string GetTestProjectDirectory()
-        {
-            string projectName = GetTestProjectNameFromCallingAssembly();
-            string projectDirectory = GetTestProjectDirectory(projectName);
-            return projectDirectory;
-        }
-
-        public string GetTestProjectDirectory(string projectFolderName)
         {
             string rootPath;
             string codeBase = Assembly.GetCallingAssembly().CodeBase;
@@ -70,14 +62,14 @@ namespace VisualStudio.TestHelpers
             {
                 LogMessage(dir);
                 string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, projectFolderName, out string detectedFolder);
+                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder);
                 if (directoryFound)
                 {
                     rootPath = detectedFolder;
                 }
                 else
                 {
-                    throw new DirectoryNotFoundException($"Could not find directory for project {projectFolderName}");
+                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  Use the {nameof(this.CurrentProjectFolderName)} property to specify explicitly");
                 }
             }
             else
@@ -95,7 +87,7 @@ namespace VisualStudio.TestHelpers
             levelsToSearch--;
             bool found = false;
 
-            LogMessage($"FindProjectDirectory({startingPath},{projectFolderName},{levelsToSearch}");
+            LogMessage($"Search for project folder {projectFolderName} in {startingPath}.  Subfolder search depth {levelsToSearch}");
 
             foreach (string dir in subDirectories)
             {
@@ -107,6 +99,8 @@ namespace VisualStudio.TestHelpers
                 }
                 if (subDirName == projectFolderName)
                 {
+                    LogMessage($"Project folder found: {currentSubDir.FullName}");
+
                     projectFolder = dir;
                     return true;
                 }
@@ -204,6 +198,13 @@ namespace VisualStudio.TestHelpers
             }
 
             return false;
+        }
+
+        public StreamReader OpenFile(string folderRelativeToTestProject, string fileName)
+        {
+            string testProjectDirectory = GetTestProjectDirectory();
+            string fullPath = Path.Combine(testProjectDirectory, folderRelativeToTestProject, fileName);
+            return new StreamReader(fullPath);
         }
     }
 }
