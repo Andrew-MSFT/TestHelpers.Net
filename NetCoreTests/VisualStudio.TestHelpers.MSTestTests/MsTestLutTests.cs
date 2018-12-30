@@ -11,7 +11,7 @@ namespace Hallsoft.TestHelpers.MSTestTests
 
         public MsTestLutTests()
         {
-            _testHelper.Config.LogWriter = new ConsoleTestLogWriter();
+            _testHelper.Config.LogWriter = new DefaultTestLogWriter();
         }
 
         [TestMethod]
