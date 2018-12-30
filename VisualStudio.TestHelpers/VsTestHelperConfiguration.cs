@@ -11,6 +11,11 @@ namespace Hallsoft.TestHelpers
     public class VsTestHelperConfiguration
     {
         /// <summary>
+        /// Specifies the name of the current test project folder.  Use if the project folder isn't the same name as the test project output assembly.
+        /// </summary>
+        public string CurrentProjectFolderName { get; set; } = null;
+
+        /// <summary>
         /// Specifies a log writer for printing diagnostic logs from the test helper.
         /// </summary>
         public ITestLogWriter LogWriter { get; set; } = null;
@@ -26,5 +31,10 @@ namespace Hallsoft.TestHelpers
         /// when test is running under Live Unit Testing.
         /// </summary>
         public int TestDirectorySearchDepth { get; set; } = 6;
+
+        /// <summary>
+        /// Manually sets the test framework the project is running
+        /// </summary>
+        public TestFrameworks TestFramework { get; set; } = TestFrameworks.Unknown;
     }
 }

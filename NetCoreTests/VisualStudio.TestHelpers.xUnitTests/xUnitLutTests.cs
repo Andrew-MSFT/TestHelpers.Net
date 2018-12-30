@@ -21,7 +21,12 @@ namespace Hallsoft.TestHelpers.Tests
         [Fact]
         public void BadTestFolder()
         {
-            VsTestHelper helper = new VsTestHelper("BadProjectFolder");
+            VsTestHelperConfiguration config = new VsTestHelperConfiguration
+            {
+                CurrentProjectFolderName = "BadProjectFolder"
+            };
+
+            VsTestHelper helper = new VsTestHelper(config);
 
             Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
         }

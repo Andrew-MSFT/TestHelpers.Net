@@ -13,9 +13,6 @@ namespace Hallsoft.TestHelpers
 {
     public class VsTestHelper
     {
-        //Private fields
-        private readonly StackFrame[] _stackFrames = new StackTrace().GetFrames();
-
         /// <summary>
         /// Gets or sets the advanced configuration options
         /// </summary>
@@ -48,36 +45,25 @@ namespace Hallsoft.TestHelpers
         /// <summary>
         /// Creates a new instance of VsTestHelper
         /// </summary>
-        /// <param name="currentProjectFolderName">The name of the hosting test project</param>
-        public VsTestHelper(string currentProjectFolderName)
-        {
-            this.Config = new VsTestHelperConfiguration();
-            Initialize(currentProjectFolderName);
-        }
-
-        /// <summary>
-        /// Creates a new instance of VsTestHelper
-        /// </summary>
         /// <param name="configuration">Advanced configuration options</param>
         public VsTestHelper(VsTestHelperConfiguration configuration)
         {
             this.Config = configuration;
-            string assemblyName = GetTestProjectNameFromCallingAssembly();
-            Initialize(assemblyName);
-        }
 
-        private void Initialize(string currentProjectName)
-        {
-            this.CurrentProjectFolderName = currentProjectName;
-            this.TestFramework = DetectTestFramework();
+            this.CurrentProjectFolderName = configuration.CurrentProjectFolderName ?? GetTestProjectNameFromCallingAssembly(configuration.LogWriter);
+            this.TestFramework = configuration.TestFramework != TestFrameworks.Unknown ? configuration.TestFramework : DetectTestFramework();
             this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
         }
 
         private TestFrameworks DetectTestFramework()
         {
             LogMessage("Walking stack for LUT detection");
+
+            StackTrace stackTrace = new StackTrace();
+            StackFrame[] stackFrames = stackTrace.GetFrames();
+
             // write call stack method names
-            foreach (StackFrame stackFrame in _stackFrames)
+            foreach (StackFrame stackFrame in stackFrames)
             {
                 MethodBase method = stackFrame.GetMethod();
                 string assemblyName = method.Module.Assembly.GetName().Name;
@@ -113,7 +99,7 @@ namespace Hallsoft.TestHelpers
 
             foreach (string dir in subDirectories)
             {
-                var currentSubDir = new DirectoryInfo(dir);
+                DirectoryInfo currentSubDir = new DirectoryInfo(dir);
                 string subDirName = currentSubDir.Name;
                 if (!searchHiddenDirs && subDirName.StartsWith("."))
                 {
@@ -147,7 +133,7 @@ namespace Hallsoft.TestHelpers
         {
             string rootPath;
             string codeBase = Assembly.GetCallingAssembly().CodeBase;
-            var uri = new UriBuilder(codeBase);
+            UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             string dir = Path.GetDirectoryName(path);
 
@@ -179,11 +165,11 @@ namespace Hallsoft.TestHelpers
         {
             string name = null;
             string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-            var stackTrace = new StackTrace();
-            StackFrame[] _stackFrames = stackTrace.GetFrames();
+            StackTrace stackTrace = new StackTrace();
+            StackFrame[] stackFrames = stackTrace.GetFrames();
 
             //Have to find the first assembly in the callstack that isn't this one
-            foreach (StackFrame stackFrame in _stackFrames)
+            foreach (StackFrame stackFrame in stackFrames)
             {
                 MethodBase method = stackFrame.GetMethod();
                 string assemblyName = method.Module.Assembly.GetName().Name;
@@ -202,7 +188,7 @@ namespace Hallsoft.TestHelpers
         private bool IsRunningUnderLut()
         {
             string assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
-            var uri = new UriBuilder(assemblyLocation);
+            UriBuilder uri = new UriBuilder(assemblyLocation);
             string path = Uri.UnescapeDataString(uri.Path);
             string dir = Path.GetDirectoryName(path);
 
