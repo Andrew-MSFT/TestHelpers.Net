@@ -10,7 +10,16 @@ namespace Hallsoft.TestHelpers
 
     public class VsTestHelperConfiguration
     {
+        /// <summary>
+        /// Specifies if hidden directories should be searched when trying to find current project's folder 
+        /// when test is running under Live Unit Testing
+        /// </summary>
         public bool SearchHiddenDirectories { get; set; } = false;
+
+        /// <summary>
+        /// Specifies how deep to search the folder tree structure when trying to find the current project's folder
+        /// when test is running under Live Unit Testing
+        /// </summary>
         public int TestDirectorySearchDepth { get; set; } = 6;
     }
 }

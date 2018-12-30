@@ -20,9 +20,24 @@ namespace Hallsoft.TestHelpers
         internal ITestLogWriter LogWriter { get; set; }
 
         //Public fields
+        /// <summary>
+        /// Gets or sets the advanced configuration options
+        /// </summary>
         public VsTestHelperConfiguration Config { get; set; }
+
+        /// <summary>
+        /// Name of the folder hosting the current test project
+        /// </summary>
         public string CurrentProjectFolderName { get; private set; }
+
+        /// <summary>
+        /// If the test is currently running under Live Unit Testing
+        /// </summary>
         public bool IsRunningAsLiveUnitTest { get; private set; }
+
+        /// <summary>
+        /// Detected test framework
+        /// </summary>
         public TestFrameworks TestFramework { get; set; }
 
 
