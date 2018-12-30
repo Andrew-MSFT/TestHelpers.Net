@@ -56,7 +56,7 @@ namespace VisualStudio.TestHelpers.Tests
         {
             const string Expected = "Hello World!";
             string contents;
-            using (StreamReader reader = _testHelper.OpenFile("data", "test.txt"))
+            using (StreamReader reader = _testHelper.OpenFile("test.txt", "data"))
             {
                 contents = reader.ReadToEnd();
             }

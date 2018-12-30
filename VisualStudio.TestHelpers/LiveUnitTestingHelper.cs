@@ -35,51 +35,33 @@ namespace VisualStudio.TestHelpers
 
         }
 
-        private void Initialize(string currentProjectName)
+        private TestFrameworks DetectTestFramework()
         {
-            this.CurrentProjectFolderName = currentProjectName;
-            this.TestFramework = DetectTestFramework();
-            this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
-        }
-
-        private void LogMessage(string message, int indentLevel = 0)
-        {
-            if (this.LogWriter != null)
+            LogMessage("Walking stack for LUT detection");
+            // write call stack method names
+            foreach (StackFrame stackFrame in _stackFrames)
             {
-                this.LogWriter.LogMessage(message.PadLeft(message.Length + indentLevel));
-            }
-        }
+                MethodBase method = stackFrame.GetMethod();
+                string assemblyName = method.Module.Assembly.GetName().Name;
 
-        public string GetTestProjectDirectory()
-        {
-            string rootPath;
-            string codeBase = Assembly.GetCallingAssembly().CodeBase;
-            var uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
-            string dir = Path.GetDirectoryName(path);
+                LogMessage($"     {assemblyName}::{method}");
 
-            LogMessage($"Assembly executing in {dir}");
-
-            if (IsRunningUnderLut())
-            {
-                LogMessage(dir);
-                string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder);
-                if (directoryFound)
+                if (assemblyName.StartsWith("Microsoft.VisualStudio.TestPlatform.MSTest", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    rootPath = detectedFolder;
+                    return TestFrameworks.MsTest;
                 }
-                else
+                else if (assemblyName.StartsWith("xunit", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  Use the {nameof(this.CurrentProjectFolderName)} property to specify explicitly");
+                    return TestFrameworks.xUnit;
                 }
-            }
-            else
-            {
-                rootPath = dir.Substring(0, dir.IndexOf(@"\bin\") + 1);
+                else if (assemblyName.StartsWith("nunit", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return TestFrameworks.NUnit;
+                }
+
             }
 
-            return rootPath;
+            return TestFrameworks.Unknown;
         }
 
         internal bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool skipHiddenDirs = true)
@@ -119,7 +101,39 @@ namespace VisualStudio.TestHelpers
             return found;
         }
 
-        public string GetTestProjectNameFromCallingAssembly()
+        public string GetTestProjectDirectory()
+        {
+            string rootPath;
+            string codeBase = Assembly.GetCallingAssembly().CodeBase;
+            var uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            string dir = Path.GetDirectoryName(path);
+
+            LogMessage($"Assembly executing in {dir}");
+
+            if (this.IsRunningAsLiveUnitTest)
+            {
+                LogMessage(dir);
+                string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
+                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder);
+                if (directoryFound)
+                {
+                    rootPath = detectedFolder;
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  Use the {nameof(this.CurrentProjectFolderName)} property to specify explicitly");
+                }
+            }
+            else
+            {
+                rootPath = dir.Substring(0, dir.IndexOf(@"\bin\") + 1);
+            }
+
+            return rootPath;
+        }
+
+        internal string GetTestProjectNameFromCallingAssembly()
         {
             string name = null;
             string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
@@ -140,66 +154,46 @@ namespace VisualStudio.TestHelpers
             return name;
         }
 
+        private void Initialize(string currentProjectName)
+        {
+            this.CurrentProjectFolderName = currentProjectName;
+            this.TestFramework = DetectTestFramework();
+            this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
+        }
+
         private bool IsRunningUnderLut()
-        {
-            bool isLut = IsLutBasedOnPath();
-
-            LogMessage($"IsLut: {isLut}");
-
-            return isLut;
-        }
-
-        private TestFrameworks DetectTestFramework()
-        {
-            LogMessage("Walking stack for LUT detection");
-            // write call stack method names
-            foreach (StackFrame stackFrame in _stackFrames)
-            {
-                MethodBase method = stackFrame.GetMethod();
-                string assemblyName = method.Module.Assembly.GetName().Name;
-
-                LogMessage($"     {assemblyName}::{method}");
-
-                if (assemblyName.StartsWith("Microsoft.VisualStudio.TestPlatform.MSTest", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return TestFrameworks.MsTest;
-                }
-                else if (assemblyName.StartsWith("xunit", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return TestFrameworks.xUnit;
-                }
-                else if (assemblyName.StartsWith("nunit", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return TestFrameworks.NUnit;
-                }
-
-            }
-
-            return TestFrameworks.Unknown;
-        }
-
-        private bool IsLutBasedOnPath()
         {
             string assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
             var uri = new UriBuilder(assemblyLocation);
             string path = Uri.UnescapeDataString(uri.Path);
             string dir = Path.GetDirectoryName(path);
 
-            LogMessage($"IsLutBasedOnPath: dir={dir}");
+            LogMessage($"Detecting LUT based on exe path: exeDir={dir}");
 
             //running in the context of LUT, and the path needs to be adjusted
-            if (dir.Contains(@"\.vs\"))
+            if (dir.Contains(@"\.vs\") && dir.Contains("lut"))
             {
+                LogMessage("Detected as LUT");
                 return true;
             }
 
+            LogMessage("LUT not detected");
             return false;
         }
 
-        public StreamReader OpenFile(string folderRelativeToTestProject, string fileName)
+        private void LogMessage(string message, int indentLevel = 0)
+        {
+            if (this.LogWriter != null)
+            {
+                int totalWidth = message.Length + indentLevel * 2;
+                this.LogWriter.LogMessage(message.PadLeft(totalWidth));
+            }
+        }
+
+        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject)
         {
             string testProjectDirectory = GetTestProjectDirectory();
-            string fullPath = Path.Combine(testProjectDirectory, folderRelativeToTestProject, fileName);
+            string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
             return new StreamReader(fullPath);
         }
     }
