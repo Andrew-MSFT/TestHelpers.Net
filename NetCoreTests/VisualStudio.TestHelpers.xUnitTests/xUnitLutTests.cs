@@ -15,7 +15,7 @@ namespace Hallsoft.TestHelpers.Tests
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
         {
             _xUnitLogWriter = new xUnitLogWriter(output);
-            _testHelper.LogWriter = _xUnitLogWriter;
+            _testHelper.Config.LogWriter = _xUnitLogWriter;
         }
 
         [Fact]
@@ -30,7 +30,16 @@ namespace Hallsoft.TestHelpers.Tests
         [InlineData("VisualStudio.TestHelpers.xUnitTests")]
         public void ProjectNameFromAssembly(string projectName)
         {
-            string detectedName = _testHelper.GetTestProjectNameFromCallingAssembly();
+            string detectedName = VsTestHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
+
+            Assert.Equal(projectName, detectedName);
+        }
+
+        [Theory]
+        [InlineData("VisualStudio.TestHelpers.xUnitTests")]
+        public void ProjectNameFromAssemblyNoLogger(string projectName)
+        {
+            string detectedName = VsTestHelper.GetTestProjectNameFromCallingAssembly();
 
             Assert.Equal(projectName, detectedName);
         }

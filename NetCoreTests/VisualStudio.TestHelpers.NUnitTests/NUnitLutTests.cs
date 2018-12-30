@@ -11,7 +11,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            _testHelper.LogWriter = new ConsoleTestLogWriter();
+            _testHelper.Config.LogWriter = new ConsoleTestLogWriter();
         }
 
         [Test]

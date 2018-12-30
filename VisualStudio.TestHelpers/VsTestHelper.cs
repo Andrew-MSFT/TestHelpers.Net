@@ -16,14 +16,10 @@ namespace Hallsoft.TestHelpers
         //Private fields
         private readonly StackFrame[] _stackFrames = new StackTrace().GetFrames();
 
-        //Internal fields
-        internal ITestLogWriter LogWriter { get; set; }
-
-        //Public fields
         /// <summary>
         /// Gets or sets the advanced configuration options
         /// </summary>
-        public VsTestHelperConfiguration Config { get; set; }
+        public VsTestHelperConfiguration Config { get; private set; }
 
         /// <summary>
         /// Name of the folder hosting the current test project
@@ -38,16 +34,15 @@ namespace Hallsoft.TestHelpers
         /// <summary>
         /// Detected test framework
         /// </summary>
-        public TestFrameworks TestFramework { get; set; }
+        public TestFrameworks TestFramework { get; private set; }
 
 
         /// <summary>
         /// Creates a new instance of VsTestHelper and assumes the output assembly's name matches the test project name.
         /// </summary>
-        public VsTestHelper()
+        public VsTestHelper() : this(new VsTestHelperConfiguration())
         {
-            string assemblyName = GetTestProjectNameFromCallingAssembly();
-            Initialize(assemblyName, new VsTestHelperConfiguration());
+
         }
 
         /// <summary>
@@ -56,7 +51,26 @@ namespace Hallsoft.TestHelpers
         /// <param name="currentProjectFolderName">The name of the hosting test project</param>
         public VsTestHelper(string currentProjectFolderName)
         {
-            Initialize(currentProjectFolderName, new VsTestHelperConfiguration());
+            this.Config = new VsTestHelperConfiguration();
+            Initialize(currentProjectFolderName);
+        }
+
+        /// <summary>
+        /// Creates a new instance of VsTestHelper
+        /// </summary>
+        /// <param name="configuration">Advanced configuration options</param>
+        public VsTestHelper(VsTestHelperConfiguration configuration)
+        {
+            this.Config = configuration;
+            string assemblyName = GetTestProjectNameFromCallingAssembly();
+            Initialize(assemblyName);
+        }
+
+        private void Initialize(string currentProjectName)
+        {
+            this.CurrentProjectFolderName = currentProjectName;
+            this.TestFramework = DetectTestFramework();
+            this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
         }
 
         private TestFrameworks DetectTestFramework()
@@ -150,7 +164,7 @@ namespace Hallsoft.TestHelpers
                 }
                 else
                 {
-                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  Use the {nameof(this.CurrentProjectFolderName)} property to specify explicitly");
+                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  You may need to explicitly specify the test project folder");
                 }
             }
             else
@@ -161,10 +175,12 @@ namespace Hallsoft.TestHelpers
             return rootPath;
         }
 
-        internal string GetTestProjectNameFromCallingAssembly()
+        internal static string GetTestProjectNameFromCallingAssembly(ITestLogWriter logger = null)
         {
             string name = null;
             string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+            var stackTrace = new StackTrace();
+            StackFrame[] _stackFrames = stackTrace.GetFrames();
 
             //Have to find the first assembly in the callstack that isn't this one
             foreach (StackFrame stackFrame in _stackFrames)
@@ -178,16 +194,9 @@ namespace Hallsoft.TestHelpers
                 }
             }
 
-            LogMessage($"Calling assembly name: {name}");
-            return name;
-        }
+            logger?.LogMessage($"Calling assembly name: {name}");
 
-        private void Initialize(string currentProjectName, VsTestHelperConfiguration configuration)
-        {
-            this.CurrentProjectFolderName = currentProjectName;
-            this.Config = configuration;
-            this.TestFramework = DetectTestFramework();
-            this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
+            return name;
         }
 
         private bool IsRunningUnderLut()
@@ -212,10 +221,10 @@ namespace Hallsoft.TestHelpers
 
         private void LogMessage(string message, int indentLevel = 0)
         {
-            if (this.LogWriter != null)
+            if (this.Config.LogWriter != null)
             {
                 int totalWidth = message.Length + indentLevel * 2;
-                this.LogWriter.LogMessage(message.PadLeft(totalWidth));
+                this.Config.LogWriter.LogMessage(message.PadLeft(totalWidth));
             }
         }
 

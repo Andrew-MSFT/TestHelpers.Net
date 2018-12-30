@@ -11,7 +11,7 @@ namespace Hallsoft.TestHelpers.NetFx.MsTestTests
 
         public NetFxMsTestLutTests()
         {
-            _testHelper.LogWriter = new ConsoleTestLogWriter();
+            _testHelper.Config.LogWriter = new ConsoleTestLogWriter();
         }
 
         [TestMethod]

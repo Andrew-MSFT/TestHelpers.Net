@@ -7,12 +7,12 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
 namespace Hallsoft.TestHelpers
 {
-    internal interface ITestLogWriter
+    public interface ITestLogWriter
     {
         void LogMessage(string message);
     }
 
-    internal class ConsoleTestLogWriter : ITestLogWriter
+    public class ConsoleTestLogWriter : ITestLogWriter
     {
         public void LogMessage(string message)
         {
