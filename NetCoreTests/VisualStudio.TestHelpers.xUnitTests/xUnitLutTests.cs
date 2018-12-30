@@ -5,11 +5,11 @@ using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace VisualStudio.TestHelpers.Tests
+namespace Hallsoft.TestHelpers.Tests
 {
     public class LiveUnitTestingHelperTests
     {
-        private readonly LiveUnitTestingHelper _testHelper = new LiveUnitTestingHelper();
+        private readonly VsTestHelper _testHelper = new VsTestHelper();
         private readonly xUnitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
@@ -21,7 +21,7 @@ namespace VisualStudio.TestHelpers.Tests
         [Fact]
         public void BadTestFolder()
         {
-            LiveUnitTestingHelper helper = new LiveUnitTestingHelper("BadProjectFolder");
+            VsTestHelper helper = new VsTestHelper("BadProjectFolder");
 
             Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
         }

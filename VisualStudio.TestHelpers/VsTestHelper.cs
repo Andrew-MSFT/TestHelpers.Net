@@ -9,30 +9,39 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.MsTestTests")]
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NUnitTests")]
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
-namespace VisualStudio.TestHelpers
+namespace Hallsoft.TestHelpers
 {
-    public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
-
-    public class LiveUnitTestingHelper
+    public class VsTestHelper
     {
-        public string CurrentProjectFolderName { get; private set; }
-        public TestFrameworks TestFramework { get; set; }
-        public bool IsRunningAsLiveUnitTest { get; private set; }
-
-        internal ITestLogWriter LogWriter { get; set; }
-
+        //Private fields
         private readonly StackFrame[] _stackFrames = new StackTrace().GetFrames();
 
-        public LiveUnitTestingHelper()
+        //Internal fields
+        internal ITestLogWriter LogWriter { get; set; }
+
+        //Public fields
+        public VsTestHelperConfiguration Config { get; set; }
+        public string CurrentProjectFolderName { get; private set; }
+        public bool IsRunningAsLiveUnitTest { get; private set; }
+        public TestFrameworks TestFramework { get; set; }
+
+
+        /// <summary>
+        /// Creates a new instance of VsTestHelper and assumes the output assembly's name matches the test project name.
+        /// </summary>
+        public VsTestHelper()
         {
             string assemblyName = GetTestProjectNameFromCallingAssembly();
-            Initialize(assemblyName);
+            Initialize(assemblyName, new VsTestHelperConfiguration());
         }
 
-        public LiveUnitTestingHelper(string currentProjectFolderName)
+        /// <summary>
+        /// Creates a new instance of VsTestHelper
+        /// </summary>
+        /// <param name="currentProjectFolderName">The name of the hosting test project</param>
+        public VsTestHelper(string currentProjectFolderName)
         {
-            Initialize(currentProjectFolderName);
-
+            Initialize(currentProjectFolderName, new VsTestHelperConfiguration());
         }
 
         private TestFrameworks DetectTestFramework()
@@ -64,7 +73,7 @@ namespace VisualStudio.TestHelpers
             return TestFrameworks.Unknown;
         }
 
-        internal bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool skipHiddenDirs = true)
+        private bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool searchHiddenDirs = false)
         {
             IEnumerable<string> subDirectories = Directory.EnumerateDirectories(startingPath);
             projectFolder = null;
@@ -77,7 +86,7 @@ namespace VisualStudio.TestHelpers
             {
                 var currentSubDir = new DirectoryInfo(dir);
                 string subDirName = currentSubDir.Name;
-                if (skipHiddenDirs && subDirName.StartsWith("."))
+                if (!searchHiddenDirs && subDirName.StartsWith("."))
                 {
                     continue;
                 }
@@ -101,6 +110,10 @@ namespace VisualStudio.TestHelpers
             return found;
         }
 
+        /// <summary>
+        /// Tries to find the path for the current test project
+        /// </summary>
+        /// <returns></returns>
         public string GetTestProjectDirectory()
         {
             string rootPath;
@@ -115,7 +128,7 @@ namespace VisualStudio.TestHelpers
             {
                 LogMessage(dir);
                 string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder);
+                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder, this.Config.TestDirectorySearchDepth, this.Config.SearchHiddenDirectories);
                 if (directoryFound)
                 {
                     rootPath = detectedFolder;
@@ -154,9 +167,10 @@ namespace VisualStudio.TestHelpers
             return name;
         }
 
-        private void Initialize(string currentProjectName)
+        private void Initialize(string currentProjectName, VsTestHelperConfiguration configuration)
         {
             this.CurrentProjectFolderName = currentProjectName;
+            this.Config = configuration;
             this.TestFramework = DetectTestFramework();
             this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
         }
@@ -190,7 +204,13 @@ namespace VisualStudio.TestHelpers
             }
         }
 
-        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject)
+        /// <summary>
+        /// Opens a StreamReader on the specified file using the current test project's directory as the starting location
+        /// </summary>
+        /// <param name="fileName">Name of file to open</param>
+        /// <param name="pathRelativeToTestProject">[Optional] Path relative to current test project's root directory</param>
+        /// <returns>StreamReader</returns>
+        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject = "")
         {
             string testProjectDirectory = GetTestProjectDirectory();
             string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);

@@ -1,6 +1,6 @@
 ﻿using Xunit.Abstractions;
 
-namespace VisualStudio.TestHelpers.Tests
+namespace Hallsoft.TestHelpers.Tests
 {
     internal class xUnitLogWriter : ITestLogWriter
     {

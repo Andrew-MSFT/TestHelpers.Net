@@ -2,12 +2,12 @@
 using System;
 using System.IO;
 
-namespace VisualStudio.TestHelpers.MSTestTests
+namespace Hallsoft.TestHelpers.MSTestTests
 {
     [TestClass]
     public class MsTestLutTests
     {
-        readonly LiveUnitTestingHelper _testHelper = new LiveUnitTestingHelper();
+        readonly VsTestHelper _testHelper = new VsTestHelper();
 
         public MsTestLutTests()
         {

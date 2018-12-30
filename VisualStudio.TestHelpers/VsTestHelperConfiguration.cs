@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.xUnitTests")]
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.MsTestTests")]
@@ -7,16 +6,11 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
 namespace Hallsoft.TestHelpers
 {
-    internal interface ITestLogWriter
-    {
-        void LogMessage(string message);
-    }
+    public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
 
-    internal class ConsoleTestLogWriter : ITestLogWriter
+    public class VsTestHelperConfiguration
     {
-        public void LogMessage(string message)
-        {
-            Console.WriteLine(message);
-        }
+        public bool SearchHiddenDirectories { get; set; } = false;
+        public int TestDirectorySearchDepth { get; set; } = 6;
     }
 }

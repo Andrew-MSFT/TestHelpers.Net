@@ -1,12 +1,12 @@
 ﻿using NUnit.Framework;
 using System.IO;
-using VisualStudio.TestHelpers;
+using Hallsoft.TestHelpers;
 
 namespace Tests
 {
     public class NUnitLutTests
     {
-        readonly LiveUnitTestingHelper _testHelper = new LiveUnitTestingHelper();
+        readonly VsTestHelper _testHelper = new VsTestHelper();
 
         [SetUp]
         public void Setup()
