@@ -15,15 +15,6 @@ namespace VisualStudio.TestHelpers.NetFx.MsTestTests
         }
 
         [TestMethod]
-        public void RunningUnderLut()
-        {
-            bool runningUnderLut = _testHelper.IsRunningUnderLut();
-            bool pathBased = _testHelper.IsLutBasedOnPath();
-
-            Assert.AreEqual(pathBased, runningUnderLut);
-        }
-
-        [TestMethod]
         public void CanOpenFile()
         {
             string projectDirectory = _testHelper.GetTestProjectDirectory();

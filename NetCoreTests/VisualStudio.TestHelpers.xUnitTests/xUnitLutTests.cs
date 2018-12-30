@@ -10,13 +10,12 @@ namespace VisualStudio.TestHelpers.Tests
     public class LiveUnitTestingHelperTests
     {
         private readonly LiveUnitTestingHelper _testHelper = new LiveUnitTestingHelper();
-
-        private ITestOutputHelper _output;
+        private readonly xUnitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
         {
-            _testHelper.LogWriter = new xUnitLogWriter(output);
-            _output = output;
+            _xUnitLogWriter = new xUnitLogWriter(output);
+            _testHelper.LogWriter = _xUnitLogWriter;
         }
 
         [Fact]
@@ -25,15 +24,6 @@ namespace VisualStudio.TestHelpers.Tests
             LiveUnitTestingHelper helper = new LiveUnitTestingHelper("BadProjectFolder");
 
             Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
-        }
-
-        [Fact]
-        public void RunningUnderLut()
-        {
-            bool runningUnderLut = _testHelper.IsRunningUnderLut();
-            bool pathBased = _testHelper.IsLutBasedOnPath();
-
-            Assert.Equal(pathBased, runningUnderLut);
         }
 
         [Theory]

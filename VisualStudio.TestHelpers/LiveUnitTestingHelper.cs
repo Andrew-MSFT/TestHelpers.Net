@@ -15,12 +15,13 @@ namespace VisualStudio.TestHelpers
 
     public class LiveUnitTestingHelper
     {
-        private List<string> DiagnosticLog { get; set; }
-
         public string CurrentProjectFolderName { get; private set; }
         public TestFrameworks TestFramework { get; set; }
+        public bool IsRunningAsLiveUnitTest { get; private set; }
 
         internal ITestLogWriter LogWriter { get; set; }
+
+        private readonly StackFrame[] _stackFrames = new StackTrace().GetFrames();
 
         public LiveUnitTestingHelper()
         {
@@ -38,13 +39,14 @@ namespace VisualStudio.TestHelpers
         {
             this.CurrentProjectFolderName = currentProjectName;
             this.TestFramework = DetectTestFramework();
+            this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
         }
 
-        private void LogMessage(string message)
+        private void LogMessage(string message, int indentLevel = 0)
         {
-            if(this.LogWriter != null)
+            if (this.LogWriter != null)
             {
-                this.LogWriter.LogMessage(message);
+                this.LogWriter.LogMessage(message.PadLeft(message.Length + indentLevel));
             }
         }
 
@@ -122,11 +124,8 @@ namespace VisualStudio.TestHelpers
             string name = null;
             string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
 
-            var stackTrace = new StackTrace();           // get call stack
-            StackFrame[] stackFrames = stackTrace.GetFrames();  // get method calls (frames)
-
             //Have to find the first assembly in the callstack that isn't this one
-            foreach (StackFrame stackFrame in stackFrames)
+            foreach (StackFrame stackFrame in _stackFrames)
             {
                 MethodBase method = stackFrame.GetMethod();
                 string assemblyName = method.Module.Assembly.GetName().Name;
@@ -141,7 +140,7 @@ namespace VisualStudio.TestHelpers
             return name;
         }
 
-        public bool IsRunningUnderLut()
+        private bool IsRunningUnderLut()
         {
             bool isLut = IsLutBasedOnPath();
 
@@ -152,12 +151,9 @@ namespace VisualStudio.TestHelpers
 
         private TestFrameworks DetectTestFramework()
         {
-            var stackTrace = new StackTrace();           // get call stack
-            StackFrame[] stackFrames = stackTrace.GetFrames();  // get method calls (frames)
-
             LogMessage("Walking stack for LUT detection");
             // write call stack method names
-            foreach (StackFrame stackFrame in stackFrames)
+            foreach (StackFrame stackFrame in _stackFrames)
             {
                 MethodBase method = stackFrame.GetMethod();
                 string assemblyName = method.Module.Assembly.GetName().Name;
@@ -182,7 +178,7 @@ namespace VisualStudio.TestHelpers
             return TestFrameworks.Unknown;
         }
 
-        internal bool IsLutBasedOnPath()
+        private bool IsLutBasedOnPath()
         {
             string assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
             var uri = new UriBuilder(assemblyLocation);

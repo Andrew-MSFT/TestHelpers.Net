@@ -15,15 +15,6 @@ namespace Tests
         }
 
         [Test]
-        public void RunningUnderLut()
-        {
-            bool runningUnderLut = _testHelper.IsRunningUnderLut();
-            bool pathBased = _testHelper.IsLutBasedOnPath();
-
-            Assert.AreEqual(runningUnderLut, pathBased);
-        }
-
-        [Test]
         public void CanOpenFile()
         {
             string projectDirectory = _testHelper.GetTestProjectDirectory();
