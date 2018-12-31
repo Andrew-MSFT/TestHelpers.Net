@@ -17,11 +17,16 @@ namespace Hallsoft.TestHelpers.NetFx.MsTestTests
         [TestMethod]
         public void CanOpenFile()
         {
-            string projectDirectory = _testHelper.GetTestProjectDirectory();
-            string fullFile = Path.Combine(projectDirectory, "test.txt");
+            const string ExpectedContents = "Hello .NET Framework MSTest";
+            string contents;
+            using (StreamReader reader = _testHelper.OpenFile("test.txt"))
+            {
+                contents = reader.ReadToEnd();
+            }
 
-            Assert.IsTrue(File.Exists(fullFile));
+            Assert.AreEqual(ExpectedContents, contents);
         }
+
 
         [TestMethod]
         public void DetectMsTestFramework()

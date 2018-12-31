@@ -221,13 +221,24 @@ namespace Hallsoft.TestHelpers
         /// Opens a StreamReader on the specified file using the current test project's directory as the starting location
         /// </summary>
         /// <param name="fileName">Name of file to open</param>
-        /// <param name="pathRelativeToTestProject">[Optional] Path relative to current test project's root directory</param>
         /// <returns>StreamReader</returns>
-        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject = "")
+        public StreamReader OpenFile(string fileName)
+        {
+            return OpenFile(fileName, "");
+        }
+
+        /// <summary>
+        /// Opens a StreamReader on the specified file using the current test project's directory as the starting location
+        /// </summary>
+        /// <param name="fileName">Name of file to open</param>
+        /// <param name="pathRelativeToTestProject">Path relative to current test project's directory</param>
+        /// <returns>StreamReader</returns>
+        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject)
         {
             string testProjectDirectory = GetTestProjectDirectory();
             string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
             return new StreamReader(fullPath);
         }
+
     }
 }
