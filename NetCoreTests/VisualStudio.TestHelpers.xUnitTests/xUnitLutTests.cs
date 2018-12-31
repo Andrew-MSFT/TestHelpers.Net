@@ -27,9 +27,11 @@ namespace Hallsoft.TestHelpers.Tests
             };
 
             string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\.vs\");
-            VsTestHelper helper = new VsTestHelper(config);
-            helper.IsRunningAsLiveUnitTest = true;
-            helper.MockBinaryRootPath = startingPath;
+            VsTestHelper helper = new VsTestHelper(config)
+            {
+                IsRunningAsLiveUnitTest = true,
+                MockBinaryRootPath = startingPath
+            };
 
             Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
         }
@@ -52,8 +54,10 @@ namespace Hallsoft.TestHelpers.Tests
                 LogWriter = _xUnitLogWriter
             };
 
-            VsTestHelper helper = new VsTestHelper(config);
-            helper.IsRunningAsLiveUnitTest = true;
+            VsTestHelper helper = new VsTestHelper(config)
+            {
+                IsRunningAsLiveUnitTest = true
+            };
             string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\");
             helper.FindProjectDirectory(startingPath, helper.CurrentProjectFolderName, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
 
