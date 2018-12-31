@@ -26,7 +26,10 @@ namespace Hallsoft.TestHelpers.Tests
                 CurrentProjectFolderName = "BadProjectFolder"
             };
 
+            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\.vs\");
             VsTestHelper helper = new VsTestHelper(config);
+            helper.IsRunningAsLiveUnitTest = true;
+            helper.MockBinaryRootPath = startingPath;
 
             Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
         }
@@ -51,10 +54,12 @@ namespace Hallsoft.TestHelpers.Tests
 
             VsTestHelper helper = new VsTestHelper(config);
             helper.IsRunningAsLiveUnitTest = true;
-            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..");
+            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\");
             helper.FindProjectDirectory(startingPath, helper.CurrentProjectFolderName, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
 
-            Assert.Equal(_testHelper.GetTestProjectDirectory(), projectFolder);
+            string expected = _testHelper.GetTestProjectDirectory();
+            Assert.Equal(expected.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
+                projectFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         }
 
         [Theory]

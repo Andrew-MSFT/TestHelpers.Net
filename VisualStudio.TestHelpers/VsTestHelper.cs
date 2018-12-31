@@ -128,6 +128,8 @@ namespace Hallsoft.TestHelpers
             return found;
         }
 
+        internal string MockBinaryRootPath { get; set; } = null;
+
         /// <summary>
         /// Tries to find the path for the current test project
         /// </summary>
@@ -138,7 +140,7 @@ namespace Hallsoft.TestHelpers
             string codeBase = Assembly.GetCallingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
-            string dir = Path.GetDirectoryName(path);
+            string dir = this.MockBinaryRootPath ?? Path.GetDirectoryName(path);
 
             LogMessage($"Assembly executing in {dir}");
 
