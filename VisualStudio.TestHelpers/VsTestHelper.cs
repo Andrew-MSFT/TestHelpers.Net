@@ -26,7 +26,7 @@ namespace Hallsoft.TestHelpers
         /// <summary>
         /// If the test is currently running under Live Unit Testing
         /// </summary>
-        public bool IsRunningAsLiveUnitTest { get; private set; }
+        public bool IsRunningAsLiveUnitTest { get; internal set; }
 
         /// <summary>
         /// Detected test framework
@@ -88,7 +88,7 @@ namespace Hallsoft.TestHelpers
             return TestFrameworks.Unknown;
         }
 
-        private bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool searchHiddenDirs = false)
+        internal bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool searchHiddenDirs = false)
         {
             IEnumerable<string> subDirectories = Directory.EnumerateDirectories(startingPath);
             projectFolder = null;
@@ -101,7 +101,10 @@ namespace Hallsoft.TestHelpers
             {
                 DirectoryInfo currentSubDir = new DirectoryInfo(dir);
                 string subDirName = currentSubDir.Name;
-                if (!searchHiddenDirs && subDirName.StartsWith("."))
+
+                //Nomrally directories starting with . are for configuration. 
+                //If Live Unit Testing is enabled, .vs directory will always find a match but it will be wrong
+                if ((!searchHiddenDirs && subDirName.StartsWith(".")) || subDirName == ".vs")
                 {
                     continue;
                 }
@@ -143,7 +146,7 @@ namespace Hallsoft.TestHelpers
             {
                 LogMessage(dir);
                 string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder, this.Config.TestDirectorySearchDepth, this.Config.SearchHiddenDirectories);
+                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder, this.Config.TestDirectorySearchDepth, this.Config.SearchDirectoriesStartingWithPeriod);
                 if (directoryFound)
                 {
                     rootPath = detectedFolder;

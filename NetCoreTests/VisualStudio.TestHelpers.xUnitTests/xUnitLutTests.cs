@@ -40,6 +40,23 @@ namespace Hallsoft.TestHelpers.Tests
             Assert.Equal(projectName, detectedName);
         }
 
+        [Fact]
+        public void LutSearchDirectoriesStaringWithPeriod()
+        {
+            VsTestHelperConfiguration config = new VsTestHelperConfiguration
+            {
+                SearchDirectoriesStartingWithPeriod = true,
+                LogWriter = _xUnitLogWriter
+            };
+
+            VsTestHelper helper = new VsTestHelper(config);
+            helper.IsRunningAsLiveUnitTest = true;
+            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..");
+            helper.FindProjectDirectory(startingPath, helper.CurrentProjectFolderName, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
+
+            Assert.Equal(_testHelper.GetTestProjectDirectory(), projectFolder);
+        }
+
         [Theory]
         [InlineData("VisualStudio.TestHelpers.xUnitTests")]
         public void ProjectNameFromAssemblyNoLogger(string projectName)

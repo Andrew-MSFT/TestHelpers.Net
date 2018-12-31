@@ -21,10 +21,10 @@ namespace Hallsoft.TestHelpers
         public ITestLogWriter LogWriter { get; set; } = null;
 
         /// <summary>
-        /// Specifies if hidden directories should be searched when trying to find current project's folder 
-        /// when test is running under Live Unit Testing.
+        /// Specifies if directories staring with a '.' should be searched when trying to find current project's folder 
+        /// when test is running under Live Unit Testing.  Directories staring with a '.' are usually for configuration
         /// </summary>
-        public bool SearchHiddenDirectories { get; set; } = false;
+        public bool SearchDirectoriesStartingWithPeriod { get; set; } = false;
 
         /// <summary>
         /// Specifies how deep to search the folder tree structure when trying to find the current project's folder
