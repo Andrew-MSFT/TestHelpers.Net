@@ -57,7 +57,7 @@ namespace Hallsoft.TestHelpers
 
         private TestFrameworks DetectTestFramework()
         {
-            LogMessage("Walking stack for LUT detection");
+            LogMessage("Walking stack for test framework detection");
 
             StackTrace stackTrace = new StackTrace();
             StackFrame[] stackFrames = stackTrace.GetFrames();
