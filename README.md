@@ -6,11 +6,12 @@ I find myself constantly copying and pasting a few common helper methods from ol
 
 ## Usage
 
-Instantiate a new instance of the TestHelper class
+Instantiate a new instance of the TestHelper class and then open input files using the OpenFile method.
 
 ```csharp
-TestHelper testHelper = new TestHelper();
 const string Expected = "Hello World!";
+TestHelper testHelper = new TestHelper();
+
 string contents;
 using (StreamReader reader = testHelper.OpenFile("test.txt"))
 {
@@ -19,3 +20,21 @@ using (StreamReader reader = testHelper.OpenFile("test.txt"))
 
 Assert.Equal(Expected, contents);
 ```
+
+## Working with Live Unit Testing
+Visual Studio's Live Unit Testing runs the test project outside the normal project build structure.
+By default this library assumes the test project folder matches the output assembly name of the test project.  
+- If that is true, opening files should just work with **no action required**.
+- If the assembly name is not the same as the project folder name, you will need to manually specify the name of the project folder.
+
+To manually specify the name of the project file create an instance of the TestHelperConfiguration class and set the CurrentProjectFolderName property, then pass the instance into the TestHelper constructor.
+
+```csharp
+TestHelperConfiguration config = new TestHelperConfiguration
+{
+    CurrentProjectFolderName = "ThisProjectFolderName"
+};
+
+TestHelper helper = new TestHelper(config);
+```
+
