@@ -94,7 +94,7 @@ namespace TestHelpers.Net.Tests
         {
             const string Expected = "Hello World!";
             string contents;
-            using (StreamReader reader = _testHelper.OpenFile("test.txt", "data"))
+            using (StreamReader reader = _testHelper.OpenFile("data", "test.txt"))
             {
                 contents = reader.ReadToEnd();
             }

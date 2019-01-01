@@ -230,7 +230,7 @@ namespace TestHelpers.Net
         /// <returns>StreamReader</returns>
         public StreamReader OpenFile(string fileName)
         {
-            return OpenFile(fileName, "");
+            return OpenFile("", fileName);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace TestHelpers.Net
         /// <param name="fileName">Name of file to open</param>
         /// <param name="pathRelativeToTestProject">Path relative to current test project's directory</param>
         /// <returns>StreamReader</returns>
-        public StreamReader OpenFile(string fileName, string pathRelativeToTestProject)
+        public StreamReader OpenFile(string pathRelativeToTestProject, string fileName)
         {
             string testProjectDirectory = this.ProjectDirectory.FullName;
             string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
