@@ -1,9 +1,0 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Hallsoft.VisualStudio.TestHelpers</RootNamespace>
-    <AssemblyName>Hallsoft.VisualStudio.TestHelpers</AssemblyName>
-  </PropertyGroup>
-
-</Project>

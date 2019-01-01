@@ -15,25 +15,24 @@ namespace Hallsoft.TestHelpers.Tests
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
         {
             _xUnitLogWriter = new xUnitLogWriter(output);
-            _testHelper.Config.LogWriter = _xUnitLogWriter;
+            _testHelper.Configuration.LogWriter = _xUnitLogWriter;
         }
 
         [Fact]
         public void BadTestFolder()
         {
+            string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\.vs\");
+
             VsTestHelperConfiguration config = new VsTestHelperConfiguration
             {
-                CurrentProjectFolderName = "BadProjectFolder"
-            };
-
-            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\.vs\");
-            VsTestHelper helper = new VsTestHelper(config)
-            {
-                IsRunningAsLiveUnitTest = true,
+                CurrentProjectFolderName = "BadProjectFolder",
+                IsLut = true,
                 MockBinaryRootPath = startingPath
             };
 
-            Assert.Throws<DirectoryNotFoundException>(() => helper.GetTestProjectDirectory());
+            
+
+            Assert.Throws<DirectoryNotFoundException>(() => new VsTestHelper(config));
         }
 
         [Theory]
@@ -51,17 +50,16 @@ namespace Hallsoft.TestHelpers.Tests
             VsTestHelperConfiguration config = new VsTestHelperConfiguration
             {
                 SearchDirectoriesStartingWithPeriod = true,
-                LogWriter = _xUnitLogWriter
+                LogWriter = _xUnitLogWriter,
+                IsLut = true
             };
 
-            VsTestHelper helper = new VsTestHelper(config)
-            {
-                IsRunningAsLiveUnitTest = true
-            };
-            string startingPath = Path.Combine(_testHelper.GetTestProjectDirectory(), @"..\..\");
-            helper.FindProjectDirectory(startingPath, helper.CurrentProjectFolderName, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
+            VsTestHelper helper = new VsTestHelper(config);
 
-            string expected = _testHelper.GetTestProjectDirectory();
+            string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
+            helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
+
+            string expected = _testHelper.ProjectDirectory.FullName;
             Assert.Equal(expected.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
                 projectFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         }
@@ -79,7 +77,7 @@ namespace Hallsoft.TestHelpers.Tests
         [InlineData("data", "test.txt")]
         public void CanOpenFile(string folder, string fileName)
         {
-            string projectDirectory = _testHelper.GetTestProjectDirectory();
+            string projectDirectory = _testHelper.ProjectDirectory.FullName;
             string fullFile = Path.Combine(projectDirectory, folder, fileName);
 
             Assert.True(File.Exists(fullFile));

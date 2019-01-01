@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Hallsoft.TestHelpers</RootNamespace>
+    <AssemblyName>Hallsoft.TestHelpers.Net</AssemblyName>
+    <Version>1.0.0</Version>
+    <Description>Helper functions for opening test data files inside test projects. Correctly handles tests running under Live Unit Testing.</Description>
+    <Authors>Andrew Hall</Authors>
+    <Company></Company>
+    <SignAssembly>false</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <PackageId>Hallsoft.TestHelper.Net</PackageId>
+    <Product>Hallsoft.TestHelper.Net</Product>
+  </PropertyGroup>
+
+</Project>

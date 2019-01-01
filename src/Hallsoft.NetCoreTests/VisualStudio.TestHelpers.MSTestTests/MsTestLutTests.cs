@@ -11,13 +11,13 @@ namespace Hallsoft.TestHelpers.MSTestTests
 
         public MsTestLutTests()
         {
-            _testHelper.Config.LogWriter = new DefaultTestLogWriter();
+            _testHelper.Configuration.LogWriter = new DefaultTestLogWriter();
         }
 
         [TestMethod]
         public void CanOpenFile()
         {
-            string projectDirectory = _testHelper.GetTestProjectDirectory();
+            string projectDirectory = _testHelper.ProjectDirectory.FullName;
             string fullFile = Path.Combine(projectDirectory, "data", "test.txt");
 
             Assert.IsTrue(File.Exists(fullFile));

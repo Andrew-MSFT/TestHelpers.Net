@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
-<package >
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>$id$</id>
-    <version>$version$</version>
+    <version>$version$-beta</version>
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>https://github.com/Andrew-MSFT/VisualStudioTestHelper/blob/master/LICENSE</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>https://github.com/Andrew-MSFT/VisualStudioTestHelper</projectUrl>
     <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <releaseNotes>Initial release.</releaseNotes>
     <copyright>Copyright 2018</copyright>
-    <tags>VisualStudio Test UnitTesting</tags>
+    <tags>testing, unit testing, live unit testing</tags>
   </metadata>
 </package>

@@ -54,9 +54,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\VisualStudio.TestHelpers\VisualStudio.TestHelpers.csproj">
+    <ProjectReference Include="..\..\Hallsoft.TestHelpers.Net\TestHelpers.Net.csproj">
       <Project>{968139fa-53cf-4958-969f-a6891fa2d2b3}</Project>
-      <Name>VisualStudio.TestHelpers</Name>
+      <Name>TestHelpers.Net</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

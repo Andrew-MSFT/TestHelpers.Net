@@ -36,5 +36,8 @@ namespace Hallsoft.TestHelpers
         /// Manually sets the test framework the project is running
         /// </summary>
         public TestFrameworks TestFramework { get; set; } = TestFrameworks.Unknown;
+
+        internal bool IsLut { get; set; } = false;
+        internal string MockBinaryRootPath { get; set; } = null;
     }
 }

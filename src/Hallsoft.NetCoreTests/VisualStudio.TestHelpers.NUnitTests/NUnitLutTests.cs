@@ -11,13 +11,13 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            _testHelper.Config.LogWriter = new DefaultTestLogWriter();
+            _testHelper.Configuration.LogWriter = new DefaultTestLogWriter();
         }
 
         [Test]
         public void CanOpenFile()
         {
-            string projectDirectory = _testHelper.GetTestProjectDirectory();
+            string projectDirectory = _testHelper.ProjectDirectory.FullName;
             string fullFile = Path.Combine(projectDirectory, "test.txt");
 
             Assert.IsTrue(File.Exists(fullFile));

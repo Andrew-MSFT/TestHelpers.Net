@@ -16,17 +16,17 @@ namespace Hallsoft.TestHelpers
         /// <summary>
         /// Gets or sets the advanced configuration options
         /// </summary>
-        public VsTestHelperConfiguration Config { get; private set; }
+        public VsTestHelperConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// Name of the folder hosting the current test project
         /// </summary>
-        public string CurrentProjectFolderName { get; private set; }
+        public DirectoryInfo ProjectDirectory { get; private set; }
 
         /// <summary>
         /// If the test is currently running under Live Unit Testing
         /// </summary>
-        public bool IsRunningAsLiveUnitTest { get; internal set; }
+        public bool IsRunningAsLiveUnitTest { get; private set; }
 
         /// <summary>
         /// Detected test framework
@@ -48,11 +48,16 @@ namespace Hallsoft.TestHelpers
         /// <param name="configuration">Advanced configuration options</param>
         public VsTestHelper(VsTestHelperConfiguration configuration)
         {
-            this.Config = configuration;
+            this.Configuration = configuration;
 
-            this.CurrentProjectFolderName = configuration.CurrentProjectFolderName ?? GetTestProjectNameFromCallingAssembly(configuration.LogWriter);
-            this.TestFramework = configuration.TestFramework != TestFrameworks.Unknown ? configuration.TestFramework : DetectTestFramework();
+#if DEBUG
+            this.IsRunningAsLiveUnitTest = configuration.IsLut ? configuration.IsLut : IsRunningUnderLut();
+#else
             this.IsRunningAsLiveUnitTest = IsRunningUnderLut();
+#endif
+
+            this.TestFramework = configuration.TestFramework != TestFrameworks.Unknown ? configuration.TestFramework : DetectTestFramework();
+            this.ProjectDirectory = GetTestProjectDirectory();
         }
 
         private TestFrameworks DetectTestFramework()
@@ -128,34 +133,36 @@ namespace Hallsoft.TestHelpers
             return found;
         }
 
-        internal string MockBinaryRootPath { get; set; } = null;
+        
 
         /// <summary>
         /// Tries to find the path for the current test project
         /// </summary>
         /// <returns></returns>
-        public string GetTestProjectDirectory()
+        private DirectoryInfo GetTestProjectDirectory()
         {
             string rootPath;
             string codeBase = Assembly.GetCallingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
-            string dir = this.MockBinaryRootPath ?? Path.GetDirectoryName(path);
+            string dir = this.Configuration.MockBinaryRootPath ?? Path.GetDirectoryName(path);
+
+            string projectFolderName = this.Configuration.CurrentProjectFolderName ?? GetTestProjectNameFromCallingAssembly(this.Configuration.LogWriter);
 
             LogMessage($"Assembly executing in {dir}");
 
-            if (this.IsRunningAsLiveUnitTest)
+            if (this.IsRunningAsLiveUnitTest && dir.IndexOf(@"\.vs\") > 0)
             {
                 LogMessage(dir);
                 string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, this.CurrentProjectFolderName, out string detectedFolder, this.Config.TestDirectorySearchDepth, this.Config.SearchDirectoriesStartingWithPeriod);
+                bool directoryFound = FindProjectDirectory(solutionRoot, projectFolderName, out string detectedFolder, this.Configuration.TestDirectorySearchDepth, this.Configuration.SearchDirectoriesStartingWithPeriod);
                 if (directoryFound)
                 {
                     rootPath = detectedFolder;
                 }
                 else
                 {
-                    throw new DirectoryNotFoundException($"Could not find directory for project {this.CurrentProjectFolderName}.  You may need to explicitly specify the test project folder");
+                    throw new DirectoryNotFoundException($"Could not find directory for project {projectFolderName}.  You may need to explicitly specify the test project folder");
                 }
             }
             else
@@ -163,7 +170,7 @@ namespace Hallsoft.TestHelpers
                 rootPath = dir.Substring(0, dir.IndexOf(@"\bin\") + 1);
             }
 
-            return rootPath;
+            return new DirectoryInfo(rootPath);
         }
 
         internal static string GetTestProjectNameFromCallingAssembly(ITestLogWriter logger = null)
@@ -212,10 +219,10 @@ namespace Hallsoft.TestHelpers
 
         private void LogMessage(string message, int indentLevel = 0)
         {
-            if (this.Config.LogWriter != null)
+            if (this.Configuration.LogWriter != null)
             {
                 int totalWidth = message.Length + indentLevel * 2;
-                this.Config.LogWriter.LogMessage(message.PadLeft(totalWidth));
+                this.Configuration.LogWriter.LogMessage(message.PadLeft(totalWidth));
             }
         }
 
@@ -237,7 +244,7 @@ namespace Hallsoft.TestHelpers
         /// <returns>StreamReader</returns>
         public StreamReader OpenFile(string fileName, string pathRelativeToTestProject)
         {
-            string testProjectDirectory = GetTestProjectDirectory();
+            string testProjectDirectory = this.ProjectDirectory.FullName;
             string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
             return new StreamReader(fullPath);
         }
