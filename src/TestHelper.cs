@@ -5,18 +5,15 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.xUnitTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.MsTestTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NUnitTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
-namespace Hallsoft.TestHelpers
+[assembly: InternalsVisibleTo("TestHelpers.NetCoreTests.xUnit")]
+namespace TestHelpers.Net
 {
-    public class VsTestHelper
+    public class TestHelper
     {
         /// <summary>
         /// Gets or sets the advanced configuration options
         /// </summary>
-        public VsTestHelperConfiguration Configuration { get; private set; }
+        public TestHelperConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// Name of the folder hosting the current test project
@@ -37,7 +34,7 @@ namespace Hallsoft.TestHelpers
         /// <summary>
         /// Creates a new instance of VsTestHelper and assumes the output assembly's name matches the test project name.
         /// </summary>
-        public VsTestHelper() : this(new VsTestHelperConfiguration())
+        public TestHelper() : this(new TestHelperConfiguration())
         {
 
         }
@@ -46,7 +43,7 @@ namespace Hallsoft.TestHelpers
         /// Creates a new instance of VsTestHelper
         /// </summary>
         /// <param name="configuration">Advanced configuration options</param>
-        public VsTestHelper(VsTestHelperConfiguration configuration)
+        public TestHelper(TestHelperConfiguration configuration)
         {
             this.Configuration = configuration;
 

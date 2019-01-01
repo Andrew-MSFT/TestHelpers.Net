@@ -2,18 +2,18 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("VisualStudio.TestHelpers.NetFx.MsTestTests")]
+[assembly: AssemblyTitle("TestHelpers.Net.NetFx.MsTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("VisualStudio.TestHelpers.NetFx.MsTestTests")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("TestHelpers.Net.NetFx.MsTest")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
 
-[assembly: Guid("0ad16934-c0f4-457b-96d2-28840c0ec0be")]
+[assembly: Guid("80fe3a75-bf6d-4fb3-8f49-9284d468772c")]
 
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]

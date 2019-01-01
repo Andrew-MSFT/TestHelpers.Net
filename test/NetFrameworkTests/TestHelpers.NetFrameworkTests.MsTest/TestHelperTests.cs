@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TestHelpers.Net;
 
-namespace Hallsoft.TestHelpers.NetFx.MsTestTests
+namespace TestHelpers.Net.NetFx.MsTest
 {
     [TestClass]
     public class NetFxMsTestLutTests
     {
-        readonly VsTestHelper _testHelper = new VsTestHelper();
+        readonly TestHelper _testHelper = new TestHelper();
 
         public NetFxMsTestLutTests()
         {

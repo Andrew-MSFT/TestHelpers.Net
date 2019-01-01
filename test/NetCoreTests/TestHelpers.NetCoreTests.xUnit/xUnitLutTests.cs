@@ -5,11 +5,11 @@ using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Hallsoft.TestHelpers.Tests
+namespace TestHelpers.Net.Tests
 {
     public class LiveUnitTestingHelperTests
     {
-        private readonly VsTestHelper _testHelper = new VsTestHelper();
+        private readonly TestHelper _testHelper = new TestHelper();
         private readonly xUnitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
@@ -23,7 +23,7 @@ namespace Hallsoft.TestHelpers.Tests
         {
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\.vs\");
 
-            VsTestHelperConfiguration config = new VsTestHelperConfiguration
+            TestHelperConfiguration config = new TestHelperConfiguration
             {
                 CurrentProjectFolderName = "BadProjectFolder",
                 IsLut = true,
@@ -32,14 +32,14 @@ namespace Hallsoft.TestHelpers.Tests
 
             
 
-            Assert.Throws<DirectoryNotFoundException>(() => new VsTestHelper(config));
+            Assert.Throws<DirectoryNotFoundException>(() => new TestHelper(config));
         }
 
         [Theory]
-        [InlineData("VisualStudio.TestHelpers.xUnitTests")]
+        [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssembly(string projectName)
         {
-            string detectedName = VsTestHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
+            string detectedName = TestHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
 
             Assert.Equal(projectName, detectedName);
         }
@@ -47,14 +47,14 @@ namespace Hallsoft.TestHelpers.Tests
         [Fact]
         public void LutSearchDirectoriesStaringWithPeriod()
         {
-            VsTestHelperConfiguration config = new VsTestHelperConfiguration
+            TestHelperConfiguration config = new TestHelperConfiguration
             {
                 SearchDirectoriesStartingWithPeriod = true,
                 LogWriter = _xUnitLogWriter,
                 IsLut = true
             };
 
-            VsTestHelper helper = new VsTestHelper(config);
+            TestHelper helper = new TestHelper(config);
 
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
             helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
@@ -65,10 +65,10 @@ namespace Hallsoft.TestHelpers.Tests
         }
 
         [Theory]
-        [InlineData("VisualStudio.TestHelpers.xUnitTests")]
+        [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssemblyNoLogger(string projectName)
         {
-            string detectedName = VsTestHelper.GetTestProjectNameFromCallingAssembly();
+            string detectedName = TestHelper.GetTestProjectNameFromCallingAssembly();
 
             Assert.Equal(projectName, detectedName);
         }

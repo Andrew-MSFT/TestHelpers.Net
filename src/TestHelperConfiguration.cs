@@ -1,14 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.xUnitTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.MsTestTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NUnitTests")]
-[assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
-namespace Hallsoft.TestHelpers
+namespace TestHelpers.Net
 {
     public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
 
-    public class VsTestHelperConfiguration
+    public class TestHelperConfiguration
     {
         /// <summary>
         /// Specifies the name of the current test project folder.  Use if the project folder isn't the same name as the test project output assembly.

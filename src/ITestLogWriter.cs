@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.MsTestTests")]
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NUnitTests")]
 [assembly: InternalsVisibleTo("VisualStudio.TestHelpers.NetFx.MsTestTests")]
-namespace Hallsoft.TestHelpers
+namespace TestHelpers.Net
 {
     /// <summary>
     /// Defines an output log writer for a unit testing framework.
