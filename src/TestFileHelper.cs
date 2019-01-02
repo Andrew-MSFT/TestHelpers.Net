@@ -31,7 +31,7 @@ namespace TestHelpers
         public TestFrameworks TestFramework { get; private set; }
 
         //Private properties
-        StackFrame[] _stackFrames = new StackTrace().GetFrames();
+        readonly StackFrame[] _stackFrames = new StackTrace().GetFrames();
 
 
         /// <summary>

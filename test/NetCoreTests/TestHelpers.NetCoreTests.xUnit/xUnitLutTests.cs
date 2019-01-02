@@ -67,11 +67,13 @@ namespace TestHelpers.Net.Tests
         [Fact]
         public void LutSearchBinAndObjDirectories()
         {
+            LogRecorder logRecorder = new LogRecorder(_xUnitLogWriter);
+
             TestFileHelperConfiguration config = new TestFileHelperConfiguration
             {
                 SearchBinDirectories = true,
                 SearchObjDirectories = true,
-                LogWriter = _xUnitLogWriter,
+                LogWriter = logRecorder,
                 IsLut = true
             };
 
@@ -80,9 +82,29 @@ namespace TestHelpers.Net.Tests
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
             helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth);
 
+            bool binSearch = false;
+            bool objSearched = false;
+
+            foreach(string message in logRecorder.Messages)
+            {
+                if (message.TrimStart().StartsWith("Search for project folder"))
+                {
+                    if (message.Contains(@"\bin"))
+                    {
+                        binSearch = true;
+                    }
+                    else if (message.Contains(@"\obj"))
+                    {
+                        objSearched = true;
+                    }
+                }
+            }
+
             string expected = _testHelper.ProjectDirectory.FullName;
             Assert.Equal(expected.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
                 projectFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+            Assert.True(binSearch);
+            Assert.True(objSearched);
         }
 
         [Theory]
