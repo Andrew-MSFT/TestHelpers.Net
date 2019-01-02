@@ -9,13 +9,13 @@ namespace TestHelpers.Net.Tests
 {
     public class LiveUnitTestingHelperTests
     {
-        private readonly TestFileHelper _testHelper = new TestFileHelper();
+        private readonly TestFileHelper _testHelper;
         private readonly xUnitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
         {
             _xUnitLogWriter = new xUnitLogWriter(output);
-            _testHelper.Configuration.LogWriter = _xUnitLogWriter;
+            _testHelper = new TestFileHelper(new TestFileHelperConfiguration { LogWriter = _xUnitLogWriter });
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace TestHelpers.Net.Tests
         [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssembly(string projectName)
         {
-            string detectedName = TestFileHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
+            string detectedName = _testHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
 
             Assert.Equal(projectName, detectedName);
         }
@@ -57,7 +57,7 @@ namespace TestHelpers.Net.Tests
             TestFileHelper helper = new TestFileHelper(config);
 
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
-            helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
+            helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth);
 
             string expected = _testHelper.ProjectDirectory.FullName;
             Assert.Equal(expected.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
@@ -68,7 +68,7 @@ namespace TestHelpers.Net.Tests
         [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssemblyNoLogger(string projectName)
         {
-            string detectedName = TestFileHelper.GetTestProjectNameFromCallingAssembly();
+            string detectedName = _testHelper.GetTestProjectNameFromCallingAssembly();
 
             Assert.Equal(projectName, detectedName);
         }

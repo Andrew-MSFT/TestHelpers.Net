@@ -23,6 +23,16 @@ namespace TestHelpers
         public bool SearchDirectoriesStartingWithPeriod { get; set; } = false;
 
         /// <summary>
+        /// Specifies if contents of directories named "bin" should be searched for project folder.  Usually this is only project output.
+        /// </summary>
+        public bool SearchBinDirectory { get; set; } = false;
+        
+        /// <summary>
+        /// Specifies if contents of directories named "obj" should be searched for project folder.  Usually this is only project output.
+        /// </summary>
+        public bool SearchObjDirectory { get; set; } = false;
+
+        /// <summary>
         /// Specifies how deep to search the folder tree structure when trying to find the current project's folder
         /// when test is running under Live Unit Testing.
         /// </summary>

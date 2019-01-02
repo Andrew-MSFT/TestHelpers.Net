@@ -30,6 +30,9 @@ namespace TestHelpers
         /// </summary>
         public TestFrameworks TestFramework { get; private set; }
 
+        //Private properties
+        StackFrame[] _stackFrames = new StackTrace().GetFrames();
+
 
         /// <summary>
         /// Creates a new instance of VsTestHelper and assumes the output assembly's name matches the test project name.
@@ -61,16 +64,13 @@ namespace TestHelpers
         {
             LogMessage("Walking stack for test framework detection");
 
-            StackTrace stackTrace = new StackTrace();
-            StackFrame[] stackFrames = stackTrace.GetFrames();
-
             // write call stack method names
-            foreach (StackFrame stackFrame in stackFrames)
+            foreach (StackFrame stackFrame in _stackFrames)
             {
                 MethodBase method = stackFrame.GetMethod();
                 string assemblyName = method.Module.Assembly.GetName().Name;
 
-                LogMessage($"     {assemblyName}::{method}");
+                LogMessage($"{assemblyName}::{method}", 1);
 
                 if (assemblyName.StartsWith("Microsoft.VisualStudio.TestPlatform.MSTest", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -90,14 +90,14 @@ namespace TestHelpers
             return TestFrameworks.Unknown;
         }
 
-        internal bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5, bool searchHiddenDirs = false)
+        internal bool FindProjectDirectory(string startingPath, string projectFolderName, out string projectFolder, int levelsToSearch = 5)
         {
             IEnumerable<string> subDirectories = Directory.EnumerateDirectories(startingPath);
             projectFolder = null;
             levelsToSearch--;
             bool found = false;
 
-            LogMessage($"Search for project folder {projectFolderName} in {startingPath}.  Subfolder search depth {levelsToSearch}");
+            LogMessage($"Search for project folder {projectFolderName} in {startingPath}.  Subfolder search depth {levelsToSearch}", 1);
 
             foreach (string dir in subDirectories)
             {
@@ -106,7 +106,7 @@ namespace TestHelpers
 
                 //Nomrally directories starting with . are for configuration. 
                 //If Live Unit Testing is enabled, .vs directory will always find a match but it will be wrong
-                if ((!searchHiddenDirs && subDirName.StartsWith(".")) || subDirName == ".vs")
+                if ((!this.Configuration.SearchDirectoriesStartingWithPeriod && subDirName.StartsWith(".")) || subDirName == ".vs")
                 {
                     continue;
                 }
@@ -139,7 +139,7 @@ namespace TestHelpers
         private DirectoryInfo GetTestProjectDirectory()
         {
             string rootPath;
-            string codeBase = Assembly.GetCallingAssembly().CodeBase;
+            string codeBase = GetCallingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             string dir = this.Configuration.MockBinaryRootPath ?? Path.GetDirectoryName(path);
@@ -150,9 +150,9 @@ namespace TestHelpers
 
             if (this.IsRunningAsLiveUnitTest && dir.IndexOf(@"\.vs\") > 0)
             {
-                LogMessage(dir);
+                LogMessage($"Finding Project Directory: Current dir={dir}");
                 string solutionRoot = dir.Substring(0, dir.IndexOf(@"\.vs\") + 1);
-                bool directoryFound = FindProjectDirectory(solutionRoot, projectFolderName, out string detectedFolder, this.Configuration.TestDirectorySearchDepth, this.Configuration.SearchDirectoriesStartingWithPeriod);
+                bool directoryFound = FindProjectDirectory(solutionRoot, projectFolderName, out string detectedFolder, this.Configuration.TestDirectorySearchDepth);
                 if (directoryFound)
                 {
                     rootPath = detectedFolder;
@@ -170,33 +170,43 @@ namespace TestHelpers
             return new DirectoryInfo(rootPath);
         }
 
-        internal static string GetTestProjectNameFromCallingAssembly(ITestLogWriter logger = null)
+        internal string GetTestProjectNameFromCallingAssembly(ITestLogWriter logger = null)
         {
-            string name = null;
-            string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
-            StackTrace stackTrace = new StackTrace();
-            StackFrame[] stackFrames = stackTrace.GetFrames();
-
-            //Have to find the first assembly in the callstack that isn't this one
-            foreach (StackFrame stackFrame in stackFrames)
-            {
-                MethodBase method = stackFrame.GetMethod();
-                string assemblyName = method.Module.Assembly.GetName().Name;
-                if (assemblyName != thisAssembly)
-                {
-                    name = assemblyName;
-                    break;
-                }
-            }
+            Assembly callingAssembly = GetCallingAssembly();
+            string name = callingAssembly.GetName().Name;
 
             logger?.LogMessage($"Calling assembly name: {name}");
 
             return name;
         }
 
+        private Assembly GetCallingAssembly()
+        {
+            LogMessage("Finding calling assembly");
+            string thisAssembly = Assembly.GetExecutingAssembly().GetName().Name;
+            
+
+            //Have to find the first assembly in the callstack that isn't this one
+            foreach (StackFrame stackFrame in _stackFrames)
+            {
+                MethodBase method = stackFrame.GetMethod();
+                Assembly assembly = method.Module.Assembly;
+                string assemblyName = assembly.GetName().Name;
+
+                LogMessage($"{assembly.CodeBase}!{method.Name}", 1);
+
+                if (assemblyName != thisAssembly)
+                {
+                    return method.Module.Assembly;
+                }
+            }
+
+            return null;
+        }
+
         private bool IsRunningUnderLut()
         {
-            string assemblyLocation = Assembly.GetExecutingAssembly().CodeBase;
+            string assemblyLocation = GetCallingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(assemblyLocation);
             string path = Uri.UnescapeDataString(uri.Path);
             string dir = Path.GetDirectoryName(path);
@@ -218,7 +228,7 @@ namespace TestHelpers
         {
             if (this.Configuration.LogWriter != null)
             {
-                int totalWidth = message.Length + indentLevel * 2;
+                int totalWidth = message.Length + indentLevel * 4;
                 this.Configuration.LogWriter.LogMessage(message.PadLeft(totalWidth));
             }
         }
@@ -243,6 +253,9 @@ namespace TestHelpers
         {
             string testProjectDirectory = this.ProjectDirectory.FullName;
             string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
+
+            LogMessage($"Attempting to open {fullPath}");
+
             return new StreamReader(fullPath);
         }
 

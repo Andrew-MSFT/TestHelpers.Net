@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>Hallsoft.TestHelpers.Net</id>
-    <version>1.0.0-rc2</version>
+    <version>1.0.0-rc3</version>
     <title>TestHelpers.Net</title>
     <authors>Andrew Hall</authors>
     <owners>Andrew Hall</owners>
@@ -11,7 +11,7 @@
     <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Helper functions for opening test data files.  Handles tests running under Live Unit Testing.</description>
-    <releaseNotes>Initial release.</releaseNotes>
+    <releaseNotes>Bug fixes</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>testing, unit testing, live unit testing</tags>
     <dependencies>
