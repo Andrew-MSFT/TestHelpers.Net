@@ -9,7 +9,7 @@ namespace TestHelpers.Net.Tests
 {
     public class LiveUnitTestingHelperTests
     {
-        private readonly TestHelper _testHelper = new TestHelper();
+        private readonly TestFileHelper _testHelper = new TestFileHelper();
         private readonly xUnitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
@@ -23,7 +23,7 @@ namespace TestHelpers.Net.Tests
         {
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\.vs\");
 
-            TestHelperConfiguration config = new TestHelperConfiguration
+            TestFileHelperConfiguration config = new TestFileHelperConfiguration
             {
                 CurrentProjectFolderName = "BadProjectFolder",
                 IsLut = true,
@@ -32,14 +32,14 @@ namespace TestHelpers.Net.Tests
 
             
 
-            Assert.Throws<DirectoryNotFoundException>(() => new TestHelper(config));
+            Assert.Throws<DirectoryNotFoundException>(() => new TestFileHelper(config));
         }
 
         [Theory]
         [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssembly(string projectName)
         {
-            string detectedName = TestHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
+            string detectedName = TestFileHelper.GetTestProjectNameFromCallingAssembly(_xUnitLogWriter);
 
             Assert.Equal(projectName, detectedName);
         }
@@ -47,14 +47,14 @@ namespace TestHelpers.Net.Tests
         [Fact]
         public void LutSearchDirectoriesStaringWithPeriod()
         {
-            TestHelperConfiguration config = new TestHelperConfiguration
+            TestFileHelperConfiguration config = new TestFileHelperConfiguration
             {
                 SearchDirectoriesStartingWithPeriod = true,
                 LogWriter = _xUnitLogWriter,
                 IsLut = true
             };
 
-            TestHelper helper = new TestHelper(config);
+            TestFileHelper helper = new TestFileHelper(config);
 
             string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
             helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth, config.SearchDirectoriesStartingWithPeriod);
@@ -68,7 +68,7 @@ namespace TestHelpers.Net.Tests
         [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssemblyNoLogger(string projectName)
         {
-            string detectedName = TestHelper.GetTestProjectNameFromCallingAssembly();
+            string detectedName = TestFileHelper.GetTestProjectNameFromCallingAssembly();
 
             Assert.Equal(projectName, detectedName);
         }

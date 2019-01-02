@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestHelpers.Net;
+using TestHelpers;
 
 namespace TestHelpers.Net.NetFx.MsTest
 {
     [TestClass]
     public class NetFxMsTestLutTests
     {
-        readonly TestHelper _testHelper = new TestHelper();
+        readonly TestFileHelper _testHelper = new TestFileHelper();
 
         public NetFxMsTestLutTests()
         {

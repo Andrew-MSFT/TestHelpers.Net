@@ -6,14 +6,14 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TestHelpers.NetCoreTests.xUnit")]
-namespace TestHelpers.Net
+namespace TestHelpers
 {
-    public class TestHelper
+    public class TestFileHelper
     {
         /// <summary>
         /// Gets or sets the advanced configuration options
         /// </summary>
-        public TestHelperConfiguration Configuration { get; private set; }
+        public TestFileHelperConfiguration Configuration { get; private set; }
 
         /// <summary>
         /// Name of the folder hosting the current test project
@@ -34,7 +34,7 @@ namespace TestHelpers.Net
         /// <summary>
         /// Creates a new instance of VsTestHelper and assumes the output assembly's name matches the test project name.
         /// </summary>
-        public TestHelper() : this(new TestHelperConfiguration())
+        public TestFileHelper() : this(new TestFileHelperConfiguration())
         {
 
         }
@@ -43,7 +43,7 @@ namespace TestHelpers.Net
         /// Creates a new instance of VsTestHelper
         /// </summary>
         /// <param name="configuration">Advanced configuration options</param>
-        public TestHelper(TestHelperConfiguration configuration)
+        public TestFileHelper(TestFileHelperConfiguration configuration)
         {
             this.Configuration = configuration;
 

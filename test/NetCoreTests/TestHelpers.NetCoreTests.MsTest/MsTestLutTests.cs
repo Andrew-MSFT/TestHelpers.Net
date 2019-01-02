@@ -7,7 +7,7 @@ namespace TestHelpers.Net.MSTestTests
     [TestClass]
     public class MsTestLutTests
     {
-        readonly TestHelper _testHelper = new TestHelper();
+        readonly TestFileHelper _testHelper = new TestFileHelper();
 
         public MsTestLutTests()
         {

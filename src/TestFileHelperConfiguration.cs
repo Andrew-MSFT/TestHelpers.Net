@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace TestHelpers.Net
+namespace TestHelpers
 {
     public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
 
-    public class TestHelperConfiguration
+    public class TestFileHelperConfiguration
     {
         /// <summary>
         /// Specifies the name of the current test project folder.  Use if the project folder isn't the same name as the test project output assembly.

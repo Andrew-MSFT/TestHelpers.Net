@@ -1,12 +1,12 @@
 ﻿using NUnit.Framework;
 using System.IO;
-using TestHelpers.Net;
+using TestHelpers;
 
 namespace Tests
 {
     public class NUnitLutTests
     {
-        readonly TestHelper _testHelper = new TestHelper();
+        readonly TestFileHelper _testHelper = new TestFileHelper();
 
         [SetUp]
         public void Setup()

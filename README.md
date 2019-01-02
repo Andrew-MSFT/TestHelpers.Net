@@ -10,7 +10,7 @@ Instantiate a new instance of the TestHelper class and then open input files usi
 
 ```csharp
 const string Expected = "Hello World!";
-TestHelper testHelper = new TestHelper();
+TestFileHelper testHelper = new TestFileHelper();
 
 string contents;
 using (StreamReader reader = testHelper.OpenFile("test.txt"))
@@ -30,11 +30,11 @@ By default this library assumes the test project folder matches the output assem
 To manually specify the name of the project file create an instance of the TestHelperConfiguration class and set the CurrentProjectFolderName property, then pass the instance into the TestHelper constructor.
 
 ```csharp
-TestHelperConfiguration config = new TestHelperConfiguration
+TestFileHelperConfiguration config = new TestFileHelperConfiguration
 {
     CurrentProjectFolderName = "ThisProjectFolderName"
 };
 
-TestHelper helper = new TestHelper(config);
+TestFileHelper helper = new TestFileHelper(config);
 ```
 
