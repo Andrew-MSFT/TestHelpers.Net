@@ -64,6 +64,27 @@ namespace TestHelpers.Net.Tests
                 projectFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
         }
 
+        [Fact]
+        public void LutSearchBinAndObjDirectories()
+        {
+            TestFileHelperConfiguration config = new TestFileHelperConfiguration
+            {
+                SearchBinDirectories = true,
+                SearchObjDirectories = true,
+                LogWriter = _xUnitLogWriter,
+                IsLut = true
+            };
+
+            TestFileHelper helper = new TestFileHelper(config);
+
+            string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\");
+            helper.FindProjectDirectory(startingPath, helper.ProjectDirectory.Name, out string projectFolder, config.TestDirectorySearchDepth);
+
+            string expected = _testHelper.ProjectDirectory.FullName;
+            Assert.Equal(expected.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), 
+                projectFolder.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+        }
+
         [Theory]
         [InlineData("TestHelpers.NetCoreTests.xUnit")]
         public void ProjectNameFromAssemblyNoLogger(string projectName)

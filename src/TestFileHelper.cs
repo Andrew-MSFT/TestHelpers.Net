@@ -106,7 +106,10 @@ namespace TestHelpers
 
                 //Nomrally directories starting with . are for configuration. 
                 //If Live Unit Testing is enabled, .vs directory will always find a match but it will be wrong
-                if ((!this.Configuration.SearchDirectoriesStartingWithPeriod && subDirName.StartsWith(".")) || subDirName == ".vs")
+                if ((!this.Configuration.SearchDirectoriesStartingWithPeriod && subDirName.StartsWith(".")) 
+                    || (!this.Configuration.SearchBinDirectories && subDirName == "bin")
+                    || (!this.Configuration.SearchObjDirectories && subDirName == "obj")
+                    || subDirName == ".vs")
                 {
                     continue;
                 }
