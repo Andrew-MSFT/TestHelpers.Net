@@ -15,7 +15,7 @@
     <copyright>Copyright 2019</copyright>
     <tags>testing, unit testing, live unit testing</tags>
     <dependencies>
-      <group targetFramework="netstandard2.0">
+      <group targetFramework=".NETStandard2.0">
         <dependency id="NETStandard.Library" version="2.0" />
       </group>
     </dependencies>
