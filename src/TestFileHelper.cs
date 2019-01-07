@@ -109,6 +109,7 @@ namespace TestHelpers
                 if ((!this.Configuration.SearchDirectoriesStartingWithPeriod && subDirName.StartsWith(".")) 
                     || (!this.Configuration.SearchBinDirectories && subDirName == "bin")
                     || (!this.Configuration.SearchObjDirectories && subDirName == "obj")
+                    || (this.Configuration.DirectoriesToIgnore.Contains(subDirName))
                     || subDirName == ".vs")
                 {
                     continue;

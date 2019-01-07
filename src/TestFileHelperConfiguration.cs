@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace TestHelpers
 {
@@ -15,6 +16,11 @@ namespace TestHelpers
         /// Specifies a log writer for printing diagnostic logs from the test helper.
         /// </summary>
         public ITestLogWriter LogWriter { get; set; } = null;
+
+        /// <summary>
+        /// Specifies directories to ignore when searching for the project directory
+        /// </summary>
+        public List<string> DirectoriesToIgnore { get; set; } = new List<string> {"MigrationBackup" };
 
         /// <summary>
         /// Specifies if directories staring with a '.' should be searched when trying to find current project's folder 
