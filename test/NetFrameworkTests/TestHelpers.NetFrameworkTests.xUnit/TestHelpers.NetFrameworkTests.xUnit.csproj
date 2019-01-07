@@ -50,7 +50,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\TestHelpers.Net.csproj">
+    <ProjectReference Include="..\..\..\src\TestHelpers.Net.csproj">
       <Project>{968139fa-53cf-4958-969f-a6891fa2d2b3}</Project>
       <Name>TestHelpers.Net</Name>
     </ProjectReference>

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTests.NUnit", "test\NetFrameworkTests\TestHelpers.NetFrameworkTests.NUnit\TestHelpers.NetFrameworkTests.NUnit.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTests.xUnit", "test\NetFrameworkTests\TestHelpers.NetFrameworkTests.NUnit\TestHelpers.NetFrameworkTests.xUnit\TestHelpers.NetFrameworkTests.xUnit.csproj", "{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTests.xUnit", "test\NetFrameworkTests\TestHelpers.NetFrameworkTests.xUnit\TestHelpers.NetFrameworkTests.xUnit.csproj", "{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
