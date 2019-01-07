@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTests.NUnit", "test\NetFrameworkTests\TestHelpers.NetFrameworkTests.NUnit\TestHelpers.NetFrameworkTests.NUnit.csproj", "{8EDF4429-251A-416D-BB68-93F227191BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.NetFrameworkTests.xUnit", "test\NetFrameworkTests\TestHelpers.NetFrameworkTests.NUnit\TestHelpers.NetFrameworkTests.xUnit\TestHelpers.NetFrameworkTests.xUnit.csproj", "{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EDF4429-251A-416D-BB68-93F227191BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{DBBFD9EB-47EB-41A1-BCC1-D70FA4D83E17} = {8F0BE82E-4955-4325-9F7A-960240D46B39}
 		{80FE3A75-BF6D-4FB3-8F49-9284D468772C} = {BC5DFE66-BE41-4BF6-896F-9AF692729C89}
 		{8EDF4429-251A-416D-BB68-93F227191BCF} = {BC5DFE66-BE41-4BF6-896F-9AF692729C89}
+		{348B54C7-0AAC-4E24-B4A3-8DEC3CF7112C} = {BC5DFE66-BE41-4BF6-896F-9AF692729C89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {19A895F3-72A7-4296-BFEC-A84B945D1751}
