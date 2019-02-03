@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>Hallsoft.TestHelpers.Net</id>
-    <version>1.0.0</version>
+    <version>1.0.0-rc5</version>
     <title>TestHelpers.Net</title>
     <authors>Andrew Hall</authors>
     <owners>Andrew Hall</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Andrew-MSFT/TestHelpers.Net</projectUrl>
-    <iconUrl>https://github.com/Andrew-MSFT/TestHelpers.Net/blob/release/assets/logo.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/Andrew-MSFT/TestHelpers.Net/release/assets/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Helper functions for opening test data files.  Handles tests running under Live Unit Testing.</description>
     <releaseNotes>Bug fixes</releaseNotes>
