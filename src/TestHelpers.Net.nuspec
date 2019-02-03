@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata minClientVersion="2.12">
     <id>Hallsoft.TestHelpers.Net</id>
-    <version>1.0.0-rc5</version>
+    <version>1.0.0</version>
     <title>TestHelpers.Net</title>
     <authors>Andrew Hall</authors>
     <owners>Andrew Hall</owners>
