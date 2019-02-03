@@ -4,9 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hallsoft.TestHelpers;
 using Xunit;
 
-namespace TestHelpers.NetFrameworkTests.xUnit
+namespace TestHelpers.NetFrameworkTests.Xunit
 {
     public class TestHelperTests
     {

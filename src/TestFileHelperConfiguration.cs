@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace TestHelpers
+namespace Hallsoft.TestHelpers
 {
     public enum TestFrameworks { Unknown, MsTest, xUnit, NUnit }
 

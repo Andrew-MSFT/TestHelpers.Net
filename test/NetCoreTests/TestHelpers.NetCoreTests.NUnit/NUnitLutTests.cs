@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
+﻿using Hallsoft.TestHelpers;
+using NUnit.Framework;
 using System.IO;
-using TestHelpers;
 
 namespace Tests
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace TestHelpers
+namespace Hallsoft.TestHelpers
 {
     /// <summary>
     /// Defines an output log writer for a unit testing framework.

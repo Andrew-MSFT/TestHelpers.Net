@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using Hallsoft.TestHelpers;
 using Xunit.Abstractions;
 
 namespace TestHelpers.Net.Tests
 {
-    internal class xUnitLogWriter : ITestLogWriter
+    internal class XunitLogWriter : ITestLogWriter
     {
         private readonly ITestOutputHelper _output;
 
-        public xUnitLogWriter(ITestOutputHelper output)
+        public XunitLogWriter(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -21,9 +22,9 @@ namespace TestHelpers.Net.Tests
     internal class LogRecorder : ITestLogWriter
     {
         public List<string> Messages { get; set; } = new List<string>();
-        private readonly xUnitLogWriter _xUnitLogWriter;
+        private readonly XunitLogWriter _xUnitLogWriter;
 
-        public LogRecorder(xUnitLogWriter xUnitLogWriter)
+        public LogRecorder(XunitLogWriter xUnitLogWriter)
         {
             _xUnitLogWriter = xUnitLogWriter;
         }

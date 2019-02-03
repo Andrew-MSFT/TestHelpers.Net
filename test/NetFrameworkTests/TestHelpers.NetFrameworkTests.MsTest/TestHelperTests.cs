@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
+using Hallsoft.TestHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestHelpers;
 
 namespace TestHelpers.Net.NetFx.MsTest
 {

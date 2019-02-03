@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TestHelpers.NetCoreTests.xUnit")]
-namespace TestHelpers
+namespace Hallsoft.TestHelpers
 {
     public class TestFileHelper
     {
@@ -16,9 +16,19 @@ namespace TestHelpers
         public TestFileHelperConfiguration Configuration { get; private set; }
 
         /// <summary>
-        /// Name of the folder hosting the current test project
+        /// DirectoryInfo of the folder hosting the current test project
         /// </summary>
         public DirectoryInfo ProjectDirectory { get; private set; }
+
+        /// <summary>
+        /// Full name of the folder hosting the current test project
+        /// </summary>
+        public string ProjectDirectoryName => this.ProjectDirectory.Name;
+        
+        /// <summary>
+        /// Full name of the folder hosting the current test project
+        /// </summary>
+        public string ProjectDirectoryFullName => this.ProjectDirectory.FullName;
 
         /// <summary>
         /// If the test is currently running under Live Unit Testing
@@ -244,7 +254,7 @@ namespace TestHelpers
         /// <returns>StreamReader</returns>
         public StreamReader OpenFile(string fileName)
         {
-            return OpenFile("", fileName);
+            return OpenFile(new string[] { fileName });
         }
 
         /// <summary>
@@ -253,10 +263,16 @@ namespace TestHelpers
         /// <param name="fileName">Name of file to open</param>
         /// <param name="pathRelativeToTestProject">Path relative to current test project's directory</param>
         /// <returns>StreamReader</returns>
-        public StreamReader OpenFile(string pathRelativeToTestProject, string fileName)
+        public StreamReader OpenFile(params string[] paths)
         {
             string testProjectDirectory = this.ProjectDirectory.FullName;
-            string fullPath = Path.Combine(testProjectDirectory, pathRelativeToTestProject, fileName);
+            string[] args = new string[paths.Length + 1];
+            args[0] = testProjectDirectory;
+            for (int i = 0; i < paths.Length; i++)
+            {
+                args[i + 1] = paths[i];
+            }
+            string fullPath = Path.Combine(args);
 
             LogMessage($"Attempting to open {fullPath}");
 

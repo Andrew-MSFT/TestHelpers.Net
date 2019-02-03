@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using Hallsoft.TestHelpers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -10,18 +11,18 @@ namespace TestHelpers.Net.Tests
     public class LiveUnitTestingHelperTests
     {
         private readonly TestFileHelper _testHelper;
-        private readonly xUnitLogWriter _xUnitLogWriter;
+        private readonly XunitLogWriter _xUnitLogWriter;
 
         public LiveUnitTestingHelperTests(ITestOutputHelper output)
         {
-            _xUnitLogWriter = new xUnitLogWriter(output);
+            _xUnitLogWriter = new XunitLogWriter(output);
             _testHelper = new TestFileHelper(new TestFileHelperConfiguration { LogWriter = _xUnitLogWriter });
         }
 
         [Fact]
         public void BadTestFolder()
         {
-            string startingPath = Path.Combine(_testHelper.ProjectDirectory.FullName, @"..\..\.vs\");
+            string startingPath = Path.Combine(_testHelper.ProjectDirectoryFullName, @"..\..\.vs\");
 
             TestFileHelperConfiguration config = new TestFileHelperConfiguration
             {
@@ -130,6 +131,25 @@ namespace TestHelpers.Net.Tests
         public void DetectxUnitFramework()
         {
             Assert.Equal(TestFrameworks.xUnit, _testHelper.TestFramework);
+        }
+
+        [Fact]
+        public void ProjectDirectoryName()
+        {
+            Assert.Equal("TestHelpers.NetCoreTests.xUnit", _testHelper.ProjectDirectoryName);
+        }
+
+        [Fact]
+        public void StreamReaderFromString()
+        {
+            const string InputContent = "Hello world!";
+            string actualContents;
+            using(StreamReader reader = TestInputHelper.CreateStreamReader(InputContent))
+            {
+                actualContents = reader.ReadToEnd();
+            }
+
+            Assert.Equal(InputContent, actualContents);
         }
 
         [Fact]
