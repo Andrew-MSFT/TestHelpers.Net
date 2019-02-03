@@ -8,12 +8,12 @@
     <owners>Andrew Hall</owners>
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/Andrew-MSFT/TestHelpers.Net</projectUrl>
-    <!-- <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl> -->
+    <iconUrl>https://github.com/Andrew-MSFT/TestHelpers.Net/blob/release/assets/logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Helper functions for opening test data files.  Handles tests running under Live Unit Testing.</description>
     <releaseNotes>Bug fixes</releaseNotes>
     <copyright>Copyright 2019</copyright>
-    <tags>testing, unit testing, live unit testing</tags>
+    <tags>testing, test, tdd, mstest, nunit, xunit</tags>
     <dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="NETStandard.Library" version="2.0" />
